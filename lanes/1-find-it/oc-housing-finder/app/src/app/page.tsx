@@ -137,7 +137,7 @@ export default function Home() {
           <div className="flex items-center gap-3 rounded-2xl bg-white/70 py-2 pl-2 pr-4 shadow-sm backdrop-blur">
             <LogoMark size={42} />
             <Wordmark size={26} />
-            <span className="rounded-full bg-[#f07a2c] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-sm">Prototype</span>
+            <span className="rounded-full border border-[#f07a2c]/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#d8601c]">Prototype</span>
           </div>
           <nav className="hidden items-center gap-1 rounded-full bg-white/60 p-1 text-sm shadow-sm backdrop-blur md:flex">
             <span className="rounded-full bg-white px-4 py-1.5 font-semibold text-[#1f3a5f] shadow-sm">Workbench</span>

@@ -65,17 +65,9 @@ function skyline(g: CanvasRenderingContext2D, a: number, rise: number) {
 
 function wordmark(g: CanvasRenderingContext2D, cx: number, y: number, size: number, a: number) {
   if (a <= 0) return;
-  g.save(); g.globalAlpha = a; g.font = `600 ${size}px Fraunces, Georgia, serif`; g.textBaseline = "alphabetic";
-  const wL = g.measureText("Land").width, wR = g.measureText("ra").width, o = size * 0.56, gap = size * 0.03;
-  const x0 = cx - (wL + o + 2 * gap + wR) / 2;
-  g.fillStyle = "#14284b"; g.fillText("Land", x0, y);
-  const ox = x0 + wL + gap + o / 2, oy = y - o / 2 + size * 0.02, r = o * 0.35;
-  const sg = g.createLinearGradient(0, oy - r, 0, oy + r); sg.addColorStop(0, "#ffb54d"); sg.addColorStop(1, "#e0641f");
-  g.lineWidth = o * 0.17; g.strokeStyle = sg; g.beginPath(); g.arc(ox, oy, r, 0, Math.PI * 2); g.stroke();
-  g.fillStyle = "rgba(255,181,77,.55)"; g.beginPath(); g.arc(ox, oy, r * 0.68, Math.PI, 0); g.fill();
-  g.strokeStyle = "#e0641f"; g.lineWidth = o * 0.07; g.lineCap = "round"; g.beginPath(); g.moveTo(ox - o * 0.32, oy); g.lineTo(ox + o * 0.32, oy); g.stroke();
-  const rx = x0 + wL + 2 * gap + o; const rg = g.createLinearGradient(rx, 0, rx + wR, 0); rg.addColorStop(0, "#e0641f"); rg.addColorStop(1, "#f2a03a");
-  g.fillStyle = rg; g.fillText("ra", rx, y); g.restore();
+  g.save(); g.globalAlpha = a; g.font = `800 ${size}px Inter, system-ui, sans-serif`; g.textBaseline = "alphabetic";
+  (g as any).letterSpacing = `${-0.035 * size}px`;
+  const w = g.measureText("Landora").width; g.fillStyle = "#14284b"; g.fillText("Landora", cx - w / 2, y); g.restore();
 }
 function logo(g: CanvasRenderingContext2D, d: Data, cx: number, cy: number, s: number, a: number) {
   const im = d.imgs.logo; if (!im || a <= 0) return;
