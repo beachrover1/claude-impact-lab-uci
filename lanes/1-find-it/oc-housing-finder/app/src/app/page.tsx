@@ -13,6 +13,7 @@ import CompareModal from "@/components/CompareModal";
 import CallCard from "@/components/CallCard";
 import { AssistantCard, Funnel, HeadToHead, WeightsChart } from "@/components/Workbench";
 import HeroSunset from "@/components/HeroSunset";
+import { LogoMark, Wordmark } from "@/components/Logo";
 
 const MapView = dynamic(() => import("@/components/MapView"), {
   ssr: false,
@@ -134,8 +135,8 @@ export default function Home() {
         <HeroSunset />
         <header className="relative z-[1500] mx-auto flex h-20 max-w-[1500px] items-center gap-4 px-6">
           <div className="flex items-center gap-3 rounded-2xl bg-white/70 py-2 pl-2 pr-4 shadow-sm backdrop-blur">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f3a5f] text-xl text-[#ffb54d] shadow">⌂</div>
-            <span className="font-display text-[22px] font-semibold tracking-tight text-[#1f3a5f]">Landora</span>
+            <LogoMark size={42} />
+            <Wordmark size={26} />
             <span className="rounded-full bg-[#f07a2c] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-sm">Prototype</span>
           </div>
           <nav className="hidden items-center gap-1 rounded-full bg-white/60 p-1 text-sm shadow-sm backdrop-blur md:flex">
@@ -152,7 +153,7 @@ export default function Home() {
 
         <section className="relative mx-auto max-w-[1500px] px-6 pb-28 pt-10 md:pt-14">
           <div className="absolute right-8 top-6 hidden items-center gap-3 rounded-2xl bg-white/80 px-5 py-3.5 shadow-lg backdrop-blur lg:flex">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#1f3a5f] text-2xl text-white">⌂</div>
+            <LogoMark size={46} />
             <div className="leading-tight">
               <div className="text-[17px] font-bold text-[#1f3a5f]">More Homes.</div>
               <div className="text-[17px] font-bold text-[#1f3a5f]">A Stronger OC.</div>
