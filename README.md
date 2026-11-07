@@ -5,8 +5,8 @@
 
 **Code:** [`lanes/1-find-it/oc-housing-finder/`](lanes/1-find-it/oc-housing-finder) · **Event info:** [docs/EVENT-README.md](docs/EVENT-README.md)
 
-**Team:** [team name]
-**Members:** [names]
+**Team:** OC Housing Finder
+**Members:** Angelina Alcantra Pao, Harshal
 **Lane:** 1 Find it
 **Built at:** Claude Impact Lab: UCI × SoCal Affordable Housing, November 7, 2026
 
