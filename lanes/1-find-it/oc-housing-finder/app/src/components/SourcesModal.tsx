@@ -18,7 +18,7 @@ const LAYER_NAMES: Record<string, string> = {
 export default function SourcesModal({ meta, onClose }: { meta: Meta; onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
-      <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-white p-5 text-sm" onClick={(e) => e.stopPropagation()}>
+      <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-[#FFFDF9] p-5 text-sm" onClick={(e) => e.stopPropagation()}>
         <div className="mb-3 flex justify-between">
           <h2 className="text-lg font-semibold text-ink">Sources, assumptions & data gaps</h2>
           <button onClick={onClose} className="px-2 text-stone-500">✕</button>

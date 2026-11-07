@@ -2,12 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body { height: 100%; }
-body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; background: #fafaf9; }
+html, body { min-height: 100%; }
+body {
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: #FAF7F2;
+  color: #1B2433;
+  -webkit-font-smoothing: antialiased;
+}
+.font-display { font-family: "Fraunces", Georgia, serif; font-optical-sizing: auto; }
+.num { font-variant-numeric: tabular-nums; }
 
-body { font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
-.leaflet-tooltip.ohf-tip { border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 10px; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, .18); font-size: 12px; }
+/* Warm ivory card surface */
+.card { background: #FFFDF9; border: 1px solid #E9E2D6; border-radius: 18px; box-shadow: 0 1px 0 rgba(27, 36, 51, .03), 0 8px 24px -16px rgba(27, 36, 51, .18); }
+
+/* Map */
+.leaflet-container { font-family: inherit; background: #efe9df; }
+.leaflet-tooltip.ohf-tip { border: 1px solid #E9E2D6; border-radius: 12px; padding: 8px 10px; background: #FFFDF9; box-shadow: 0 10px 25px -8px rgba(27, 36, 51, .25); font-size: 12px; }
 .leaflet-tooltip.ohf-tip::before { display: none; }
-.leaflet-container { font-family: inherit; }
-/* Light, low-contrast basemap so parcels stand out (OSM tiles, no API key) */
-.ohf-tiles { filter: grayscale(1) brightness(1.08) contrast(0.82); }
+.ohf-pin {
+  width: 34px; height: 34px; border-radius: 9999px; color: #fff; font-weight: 700; font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  border: 3px solid #FFFDF9; box-shadow: 0 0 0 4px rgba(31, 58, 95, .18), 0 6px 14px -4px rgba(0,0,0,.35);
+  font-variant-numeric: tabular-nums;
+}
+.ohf-pin-sel { box-shadow: 0 0 0 5px rgba(226, 179, 60, .75), 0 6px 14px -4px rgba(0,0,0,.35); }
+
+/* Range sliders tinted per factor via --c */
+input[type="range"].factor { -webkit-appearance: none; appearance: none; height: 6px; border-radius: 9999px; background: linear-gradient(to right, var(--c) var(--p), #ebe5da var(--p)); outline: none; }
+input[type="range"].factor::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 9999px; background: #FFFDF9; border: 3px solid var(--c); box-shadow: 0 1px 4px rgba(0,0,0,.2); cursor: pointer; }

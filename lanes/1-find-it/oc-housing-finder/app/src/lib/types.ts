@@ -21,6 +21,7 @@ export type ParcelProps = {
   flags: Record<string, boolean | null>;
   acres: number;
   zone: string | null;
+  zcat?: string | null;
 };
 
 export type Feature = {

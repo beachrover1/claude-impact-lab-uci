@@ -19,7 +19,7 @@ const SUGGESTED = [
   "Who should I call?",
 ];
 
-function answer(q: string, f: Feature, d: Detail, meta: Meta, w: Weights): string {
+export function answer(q: string, f: Feature, d: Detail, meta: Meta, w: Weights): string {
   const p = f.properties;
   const x = d.facts;
   const ql = q.toLowerCase();

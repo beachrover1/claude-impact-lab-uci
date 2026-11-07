@@ -48,12 +48,21 @@ HCD fact sheet it came from, and there's a draft question for city planning they
   "Which law fits best?", "Who should I call?"). In this build it answers only from that parcel's
   screening data, with no LLM, so it cannot invent facts. It says so on screen.
 - **Compare up to 3 parcels** side by side: every law, hazard, vacancy and score component.
+- **Ask in plain English:** "Vacant single-family lots near transit, at least half an acre" becomes
+  removable filter chips (R1, Vacant, ≥ 0.5 ac, Near transit). This uses keyword rules, not AI, and says so.
+- **Scoring studio:** presets (Balanced, Transit-first, Biggest lots, Lowest risk) and per-factor
+  sliders re-rank the call list and the map pins live. A screening funnel and a "weights vs.
+  balanced" chart show what your weights change.
+- **Ranked call list:** each card has a stacked factor × weight bar, an inline breakdown
+  (points per factor) and pathway checks taken from the real test results (✓ / ? / ✕ with the failing test).
 
-![Top-ranked site: a vacant R1 lot at 2019 N Grand Ave, with the parcel panel and site assistant](docs/screenshots/top-site-2019-n-grand.jpg)
+![The workbench: plain-English search, scoring studio, map with ranked pins, call list and screening funnel](docs/screenshots/workbench.jpg)
 
 | Map layers: zoning, transit, flood, public land | Compare up to 3 parcels |
 |---|---|
 | ![Layers](docs/screenshots/layers.jpg) | ![Compare](docs/screenshots/compare.jpg) |
+
+![Parcel panel and site assistant](docs/screenshots/top-site-2019-n-grand.jpg)
 
 **Demo video:** [link]
 **Live demo:** [optional]
@@ -140,6 +149,7 @@ python3 -m venv .venv && .venv/bin/pip install -r pipeline/requirements.txt
 | "Possibly underused" = improvements < 50% of land value | **ASSUMPTION**: weak signal in OC, where land value dominates | |
 | Capacity score = acres / 0.5, capped | **ASSUMPTION**: not a density calculation | |
 | SB 9-only parcels shown only if vacant or surplus | **ASSUMPTION**: SB 9 alone allows at most 4 units | |
+| Scoring presets (Transit-first, Biggest lots, Lowest risk) | **ASSUMPTION**: illustrative weight sets, not policy | |
 | Project size presets: 4–12 homes = 0.15–5 ac; 13–50 homes = 0.5–10 ac | **ASSUMPTION**: lot-size ranges, not a density calculation | |
 | Zone categories (R1 = single-family, etc.) | **ASSUMPTION**: our reading of the city's zone descriptions; RE treated as single-family; R2, specific plans and specific developments marked "needs review" | |
 
