@@ -1,4 +1,4 @@
-# OC Housing Finder: 30-second demo video
+# Landora: 30-second demo video
 
 Record with **Cmd+Shift+5**, then "Record Selected Portion". Browser at full screen, http://localhost:3000.
 Total narration is about 80 words, roughly 30 seconds at a calm pace.
@@ -10,12 +10,12 @@ Total narration is about 80 words, roughly 30 seconds at a calm pace.
 | Time | On screen (do this) | Say this |
 |---|---|---|
 | 0:00–0:05 | Page loaded, map with pins visible | "A small housing nonprofit in Santa Ana needs land, and today they find it by luck." |
-| 0:05–0:12 | Paste the sentence into the search bar and click **Find sites**. The chips appear and the list drops to 18 | "OC Housing Finder screens all 57,926 parcels against SB 9, SB 684, SB 1123, AB 2011 and SB 4. Just ask in plain English." |
+| 0:05–0:12 | Paste the sentence into the search bar and click **Find sites**. The chips appear and the list drops to 18 | "Landora screens all 57,926 parcels against SB 9, SB 684, SB 1123, AB 2011 and SB 4. Just ask in plain English." |
 | 0:12–0:19 | On card #1 (2019 N Grand Ave), click **Breakdown** | "Every site shows which law tests pass, which fail, and which no public data can answer, with the HCD source for each." |
 | 0:19–0:25 | Click **Transit-first** in the Scoring studio. The pins and list re-rank | "Change the priorities and the call list re-ranks live." |
 | 0:25–0:30 | Click **Full** on card #1. The drawer opens; scroll to **Draft a question to city planning** | "Then send the city a question — drafted, never sent for you. From luck to a call list." |
 
-**On-screen text for the last frame (optional):** OC Housing Finder · Santa Ana pilot · public data only · prototype, not legal advice
+**On-screen text for the last frame (optional):** Landora · Santa Ana pilot · public data only · prototype, not legal advice
 
 ## 2-minute version (if you want it longer)
 

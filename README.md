@@ -1,11 +1,13 @@
-# OC Housing Finder
+# Landora
+
+**Turn overlooked land into affordable homes.**
 
 > For a nonprofit acquisitions lead with no GIS team: a map of every Santa Ana parcel that California's
 > land-opening housing laws might unlock, with a pass / fail / unknown answer for each site test, and the source for each one.
 
 **Code:** [`lanes/1-find-it/oc-housing-finder/`](lanes/1-find-it/oc-housing-finder) · **Event info:** [docs/EVENT-README.md](docs/EVENT-README.md)
 
-**Team:** OC Housing Finder
+**Team:** Landora
 **Members:** Angelina Alcantra Pao, Harshal
 **Lane:** 1 Find it
 **Built at:** Claude Impact Lab: UCI × SoCal Affordable Housing, November 7, 2026
@@ -76,7 +78,7 @@ Surplus Land Act case **SLA0002451** (notice issued 02-20-2026, responses due 04
 "Archive"), described in the notice as vacant, "Open Space with Commercial Option".
 Source: HCD Surplus Land Act Notices of Availability, data.ca.gov, downloaded 2026-11-07.
 
-![1111 N Bristol St in OC Housing Finder](docs/screenshots/test-case-1111-n-bristol.jpg)
+![1111 N Bristol St in Landora](docs/screenshots/test-case-1111-n-bristol.jpg)
 
 | What the tool checked | Result | Source |
 |---|---|---|

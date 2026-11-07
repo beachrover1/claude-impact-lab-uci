@@ -112,7 +112,7 @@ export default function Home() {
     const csv = rows.map((r) => r.map((c) => `"${c.replace(/"/g, '""')}"`).join(",")).join("\n");
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
-    a.download = "oc-housing-finder-santa-ana-calllist.csv";
+    a.download = "landora-santa-ana-calllist.csv";
     a.click();
   }
 
@@ -135,7 +135,7 @@ export default function Home() {
         <header className="relative z-[1500] mx-auto flex h-20 max-w-[1500px] items-center gap-4 px-6">
           <div className="flex items-center gap-3 rounded-2xl bg-white/70 py-2 pl-2 pr-4 shadow-sm backdrop-blur">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f3a5f] text-xl text-[#ffb54d] shadow">⌂</div>
-            <span className="text-[18px] font-bold tracking-tight text-[#1f3a5f]">OC Housing Finder</span>
+            <span className="font-display text-[22px] font-semibold tracking-tight text-[#1f3a5f]">Landora</span>
             <span className="rounded-full bg-[#f07a2c] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-sm">Prototype</span>
           </div>
           <nav className="hidden items-center gap-1 rounded-full bg-white/60 p-1 text-sm shadow-sm backdrop-blur md:flex">

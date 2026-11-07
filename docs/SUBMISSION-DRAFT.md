@@ -1,4 +1,4 @@
-# Submission form draft: OC Housing Finder
+# Submission form draft: Landora
 
 Form: https://claudesocal.com/uci-impact-lab (`#submit`). Due **2:30 PM**.
 
@@ -7,7 +7,7 @@ Form: https://claudesocal.com/uci-impact-lab (`#submit`). Due **2:30 PM**.
 **Lane:** 1 Find it
 
 **One-liner:**
-For small housing nonprofits with no GIS team: OC Housing Finder screens every Santa Ana parcel against California's land-opening housing laws and turns the results into a ranked call list, showing pass, fail or unknown for every site test, with its source.
+For small housing nonprofits with no GIS team: Landora screens every Santa Ana parcel against California's land-opening housing laws and turns the results into a ranked call list, showing pass, fail or unknown for every site test, with its source.
 
 **The real user, before and after:**
 A one-person acquisitions lead at a small housing nonprofit (a made-up user, from scenario F02 in the lab repo). Before: sites come by luck, when a city calls about surplus land or a church offers its parking lot. Checking whether SB 9, SB 684, SB 1123, AB 2011 or SB 4 applies to one parcel means opening 5–10 maps, and nobody on staff knows GIS. After: they type "vacant single-family lots near transit, at least half an acre", get a ranked list of 18 Santa Ana sites, and open any site to see which law tests pass, which fail, and which public data can't answer, each with its HCD source. They export the list and copy a drafted question to city planning.

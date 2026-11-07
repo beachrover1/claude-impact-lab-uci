@@ -93,8 +93,8 @@ function frame(g: CanvasRenderingContext2D, t: number, d: Data) {
   if (t < 5) {
     const a = 1 - seg(t, 4.2, 5);
     skyline(g, a, ease(seg(t, 0, 1.6)));
-    text(g, "OC Housing Finder", W / 2, 400, { font: "d", size: 120, w: 600, align: "center", a: a * ease(seg(t, 0.4, 1.4)) });
-    text(g, "Where can the next affordable home go?", W / 2, 490, { size: 48, c: MUTED, align: "center", a: a * ease(seg(t, 1.0, 2.0)) });
+    text(g, "Landora", W / 2, 400, { font: "d", size: 120, w: 600, align: "center", a: a * ease(seg(t, 0.4, 1.4)) });
+    text(g, "Turn overlooked land into affordable homes.", W / 2, 490, { size: 48, c: MUTED, align: "center", a: a * ease(seg(t, 1.0, 2.0)) });
     pill(g, "PROTOTYPE · SANTA ANA PILOT", 760, 560, TERRA, "#fff", 26, a * ease(seg(t, 1.6, 2.4)));
   }
   // S2 Problem 4.5-10
@@ -218,7 +218,7 @@ function frame(g: CanvasRenderingContext2D, t: number, d: Data) {
     const a = ease(seg(t, 47.5, 48.2));
     skyline(g, a, 1);
     text(g, "From luck to a call list.", W / 2, 380, { font: "d", size: 110, w: 600, align: "center", a });
-    text(g, "OC Housing Finder · github.com/beachrover1/claude-impact-lab-uci", W / 2, 470, { size: 38, c: NAVY, w: 600, align: "center", a });
+    text(g, "Landora · github.com/beachrover1/claude-impact-lab-uci", W / 2, 470, { size: 38, c: NAVY, w: 600, align: "center", a });
     text(g, "Public data only · prototype, not legal advice · every result confirmed with the city", W / 2, 530, { size: 30, c: MUTED, align: "center", a });
   }
 }

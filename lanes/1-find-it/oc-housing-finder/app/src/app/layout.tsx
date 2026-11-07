@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "OC Housing Finder",
+  title: "Landora: Turn overlooked land into affordable homes",
   description: "Prototype: screen Santa Ana parcels against California's land-opening housing laws, with sources and unknowns shown.",
 };
 
