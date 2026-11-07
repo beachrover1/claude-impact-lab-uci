@@ -5,6 +5,7 @@
 import type { Detail, Feature, Meta, Weights } from "@/lib/types";
 import { expandTests, score } from "@/lib/types";
 import { FACTORS } from "@/lib/theme";
+import Massing3D from "./Massing3D";
 
 function Gauge({ value }: { value: number }) {
   const a = Math.PI * (1 - value / 100);
@@ -107,6 +108,7 @@ export default function Feasibility({ f, d, meta, weights }: { f: Feature; d: De
         <p className="text-[10.5px] text-[#c2562e]">Weights are ASSUMPTIONS for ranking, not legal eligibility criteria.</p>
       </div>
 
+      <Massing3D f={f} />
       <div className="mx-4 mt-3 rounded-xl bg-[#f3eee5] p-3">
         <div className="mb-1 text-[10.5px] font-semibold uppercase tracking-wider text-[#6B6458]">Site assessment</div>
         <p className="text-[12.5px] leading-relaxed text-[#1B2433]">{assessment}</p>

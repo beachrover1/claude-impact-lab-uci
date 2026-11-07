@@ -53,6 +53,9 @@ HCD fact sheet it came from, and there's a draft question for city planning they
   transit, ownership evidence and data completeness; a point-by-point "why this score"; a
   plain-language site assessment; and a concrete next step. Built only from the screening results
   (no LLM in this build, stated on screen). Weights are ASSUMPTIONS, not eligibility criteria.
+  It also draws an illustrative **3D massing** of the parcel's real outline with Floors and Rotate
+  sliders (floors, 10 ft per floor and 60% coverage are ASSUMPTIONS, labelled on screen; not a
+  design or a unit count).
   ![Feasibility Copilot](docs/screenshots/feasibility-copilot.jpg)
 - **Compare up to 3 parcels** side by side: every law, hazard, vacancy and score component.
 - **Ask in plain English:** "Vacant single-family lots near transit, at least half an acre" becomes
