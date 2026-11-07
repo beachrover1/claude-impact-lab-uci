@@ -135,9 +135,10 @@ export default function Home() {
         <HeroSunset />
         <header className="relative z-[1500] mx-auto flex h-20 max-w-[1500px] items-center gap-4 px-6">
           <div className="flex items-center gap-3 rounded-2xl bg-white/70 py-2 pl-2 pr-4 shadow-sm backdrop-blur">
-            <LogoMark size={42} />
-            <Wordmark size={26} />
-            <span className="rounded-full border border-[#f07a2c]/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#d8601c]">Prototype</span>
+            <LogoMark size={44} />
+            <Wordmark size={27} />
+            <span className="mx-1 h-7 w-px bg-[#14284b]/15" />
+            <span className="rounded-full border-[1.5px] border-[#f07a2c] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-[0.08em] text-[#e0641f]">Prototype</span>
           </div>
           <nav className="hidden items-center gap-1 rounded-full bg-white/60 p-1 text-sm shadow-sm backdrop-blur md:flex">
             <span className="rounded-full bg-white px-4 py-1.5 font-semibold text-[#1f3a5f] shadow-sm">Workbench</span>
@@ -153,7 +154,7 @@ export default function Home() {
 
         <section className="relative mx-auto max-w-[1500px] px-6 pb-28 pt-10 md:pt-14">
           <div className="absolute right-8 top-6 hidden items-center gap-3 rounded-2xl bg-white/80 px-5 py-3.5 shadow-lg backdrop-blur lg:flex">
-            <LogoMark size={46} />
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm"><LogoMark size={40} /></span>
             <div className="leading-tight">
               <div className="text-[17px] font-bold text-[#1f3a5f]">More Homes.</div>
               <div className="text-[17px] font-bold text-[#1f3a5f]">A Stronger OC.</div>

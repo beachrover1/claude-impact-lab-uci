@@ -65,8 +65,8 @@ function skyline(g: CanvasRenderingContext2D, a: number, rise: number) {
 
 function wordmark(g: CanvasRenderingContext2D, cx: number, y: number, size: number, a: number) {
   if (a <= 0) return;
-  g.save(); g.globalAlpha = a; g.font = `800 ${size}px Inter, system-ui, sans-serif`; g.textBaseline = "alphabetic";
-  (g as any).letterSpacing = `${-0.035 * size}px`;
+  g.save(); g.globalAlpha = a; g.font = `700 ${size}px Inter, system-ui, sans-serif`; g.textBaseline = "alphabetic";
+  (g as any).letterSpacing = `${-0.02 * size}px`;
   const w = g.measureText("Landora").width; g.fillStyle = "#14284b"; g.fillText("Landora", cx - w / 2, y); g.restore();
 }
 function logo(g: CanvasRenderingContext2D, d: Data, cx: number, cy: number, s: number, a: number) {
