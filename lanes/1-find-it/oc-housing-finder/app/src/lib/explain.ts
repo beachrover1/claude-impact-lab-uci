@@ -20,14 +20,17 @@ export function explain(p: ParcelProps, d: Detail, meta: Meta): { verified: stri
     const r = d.results[law.id];
     const tests = expandTests(r.tests, law);
     const passed = tests.filter((t) => t.status === "pass" || t.status === "lead").length;
-    if (r.status === "possible") verified.push(`${law.name}: ${passed} of ${law.tests.length} site tests pass on public data, and none fail.`);
-    else confirm.push(`${law.name}: the zone needs a person to read the code before this pathway can be judged.`);
+    if (r.status === "unclear") continue; // summarized in one line below
+    verified.push(`${law.name}: ${passed} of ${law.tests.length} site tests pass on public data, and none fail.`);
     for (const t of tests.filter((t) => t.status === "unknown")) {
       const label = law.tests.find((x) => x.id === t.id)?.label ?? t.id;
       confirm.push(`${law.name}: ${label}. ${t.why}`);
     }
     for (const t of tests.filter((t) => t.status === "lead")) confirm.push(t.why);
   }
+  const unclear = open.filter((l) => d.results[l.id].status === "unclear").map((l) => l.id.replace("SHRA_", ""));
+  if (unclear.length)
+    confirm.unshift(`Zone ${f.zone ?? "?"} needs a person to read the city's code before ${unclear.join(", ")} can be judged. No other test fails for these laws (see the law-by-law tests below).`);
 
   estimates.push(`Lot size about ${f.acres} acres, computed from the county parcel outline.`);
   if (f.building_coverage != null || f.vacant)
@@ -39,10 +42,23 @@ export function explain(p: ParcelProps, d: Detail, meta: Meta): { verified: stri
   if (f.vhfhsz) confirm.push(`In a very high fire hazard severity zone.`);
   if (f.liquefaction_zone) confirm.push(`Inside a state-mapped liquefaction zone: geotechnical study likely needed.`);
   if (f.landslide_zone) confirm.push(`Inside a state-mapped landslide zone.`);
-  if (f.surplus_notice) verified.push(`A Surplus Land Act notice of availability matches this APN (HCD data).`);
+  if (f.surplus_notice) {
+    const n = f.surplus_notice;
+    verified.push(
+      `${n["Local Agency"] ?? "A local agency"} issued a Surplus Land Act notice for this APN on ${n["Date Notice Issued"] ?? "an unknown date"}` +
+        ` (case ${n["Parent Case"] ?? "?"}, HCD data). Status: ${n["NOA Status"] ?? "unknown"}.`
+    );
+    if (n.archived) confirm.push(`The surplus notice is archived (response due ${n["NOA Due Date"] ?? "?"}). Whether the land is still available is unknown: ask the agency.`);
+    // Show source disagreements instead of picking one silently (lab rule)
+    if (/vacant/i.test(n["Existing Use/Vacancy"] ?? "") && (f.building_coverage ?? 0) > 0.02)
+      confirm.push(`Sources disagree on vacancy: the notice says "${String(n["Existing Use/Vacancy"]).trim()}", but county building footprints cover ${pct(f.building_coverage)} of the lot. The footprint layer may be older than the notice.`);
+    if (n.size_acres_parsed && f.acres && Math.abs(n.size_acres_parsed - f.acres) / f.acres > 0.05)
+      confirm.push(`Sources disagree on size: the notice says ${n["Parcel Size (Gross Acres)"]} (${n.size_acres_parsed.toFixed(2)} ac), the parcel outline is ${f.acres} ac.`);
+  }
   if (f.he_may_be_stale) confirm.push(`Listed as a housing-element site, but buildings now cover much of it. The listing may be stale.`);
 
-  confirm.push("Who owns it and whether they would sell: not in free parcel data.");
+  if (f.surplus_notice) confirm.push(`Owner per the surplus notice: ${f.surplus_notice["Local Agency"] ?? "a public agency"}. Ask them whether it is still available and on what terms.`);
+  else confirm.push("Who owns it and whether they would sell: not in free parcel data.");
   confirm.push("Water and sewer capacity, contamination (Phase I), and the city's objective standards (parking, setbacks).");
   return { verified, estimates, confirm };
 }

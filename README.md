@@ -42,8 +42,38 @@ HCD fact sheet it came from, and there's a draft question for city planning they
   CSV export, and a plain-language "why this site" split into *verified / estimate / needs
   confirmation*.
 
+![Top-ranked site: a vacant R1 lot at 2019 N Grand Ave, with law-by-law results](docs/screenshots/top-site-2019-n-grand.jpg)
+
 **Demo video:** [link]
 **Live demo:** [optional]
+
+## Real test case: 1111 N Bristol St, Santa Ana (city surplus land)
+
+**Why this site:** the City of Santa Ana itself offered it for sale. It is one of 14 parcels in HCD
+Surplus Land Act case **SLA0002451** (notice issued 02-20-2026, responses due 04-20-2026, now marked
+"Archive"), described in the notice as vacant, "Open Space with Commercial Option".
+Source: HCD Surplus Land Act Notices of Availability, data.ca.gov, downloaded 2026-11-07.
+
+![1111 N Bristol St in OC Housing Finder](docs/screenshots/test-case-1111-n-bristol.jpg)
+
+| What the tool checked | Result | Source |
+|---|---|---|
+| Zoning | SP1, Bristol Street Corridor Specific Plan, so ❓ for SB 9, SB 684 and AB 2011 until someone reads the plan | Santa Ana zoning layer; SCAG 2024 agrees (SP1) |
+| Size | 0.789 ac from the parcel outline vs **30,442 SF (0.70 ac)** in the notice: **sources disagree** | OC parcels; HCD notice |
+| Vacancy | Notice says "Vacant", but **county footprints cover 34%** of the lot: **sources disagree**. Because the tool trusts footprints, SB 1123 shows ❌ "not vacant", which may be wrong | HCD notice; OC Building Footprints |
+| Flood | ✅ FEMA zone X (not a special flood hazard area) | FEMA NFHL |
+| Fire | ✅ no fire hazard zone mapped (layer may predate CAL FIRE's 2025 maps) | OC LRA, CAL FIRE SRA |
+| Liquefaction | ⚠️ inside a state-mapped liquefaction zone, so a geotechnical study is likely | CGS via OC |
+| Transit | ✅ inside a High-Quality Transit Area (major bus stops), so less parking can be required under SB 9 and SB 4 | Caltrans HQTA |
+| SB 4 | No place of worship mapped; owner is the city, so SB 4 does not apply | OSM; HCD notice |
+| Still available? | ❓ unknown: the notice is archived | HCD notice |
+
+**What we learned:** the one parcel the city has publicly offered can't be judged by a
+state-law screen alone. It sits in a specific plan, and two public sources disagree about its size
+and whether it is vacant. That is exactly where nonprofits lose time. The tool shows the
+disagreement, names who owns it (the city), and drafts the question to ask Santa Ana Planning.
+Encoding the Bristol Street Corridor Specific Plan as a city rules layer is the obvious next step.
+About 12,000 Santa Ana parcels are in zones marked "needs review" (specific plans, specific developments, R2, the Metro East overlay).
 
 ## How Claude is used
 
@@ -124,11 +154,12 @@ python3 -m venv .venv && .venv/bin/pip install -r pipeline/requirements.txt
   5 acres show ❓.
 - Hazards are tested at one interior point of each parcel, so a parcel partly in a flood zone can be missed.
 - Fire zones may be an older vintage than CAL FIRE's 2025 maps.
-- Zoning categories are our reading of zone names. Specific plans (about 12,000 parcels) are marked
+- Zoning categories are our reading of zone names. Zones that need review (about 12,000 parcels: specific plans, specific developments, R2) are marked
   *Not enough data* until someone reads the plan.
 
 ## Next steps
 
+- Encode the Bristol Street Corridor Specific Plan (SP1) so city surplus land on Bristol gets real answers.
 - Add the Santa Ana housing-element inventory from HCD, then a stale-site check against footprints.
 - Add historic, wetlands and CGS fault-zone layers to turn more ❓ into ✅/❌.
 - Encode Santa Ana's objective standards (parking, setbacks) as a city rules layer.
