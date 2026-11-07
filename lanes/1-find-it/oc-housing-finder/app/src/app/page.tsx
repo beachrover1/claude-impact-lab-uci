@@ -137,8 +137,6 @@ export default function Home() {
           <div className="flex items-center gap-3 rounded-2xl bg-white/70 py-2 pl-2 pr-4 shadow-sm backdrop-blur">
             <LogoMark size={44} />
             <Wordmark size={27} />
-            <span className="mx-1 h-7 w-px bg-[#14284b]/15" />
-            <span className="rounded-full border-[1.5px] border-[#f07a2c] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-[0.08em] text-[#e0641f]">Prototype</span>
           </div>
           <nav className="hidden items-center gap-1 rounded-full bg-white/60 p-1 text-sm shadow-sm backdrop-blur md:flex">
             <span className="rounded-full bg-white px-4 py-1.5 font-semibold text-[#1f3a5f] shadow-sm">Workbench</span>
@@ -169,8 +167,8 @@ export default function Home() {
             <h1 className="font-display text-[44px] font-semibold leading-[1.05] tracking-tight text-[#14284b] md:text-[64px]">
               Turn overlooked land into affordable homes.
             </h1>
-            <p className="mt-5 max-w-[620px] text-[18px] leading-relaxed text-[#33415c]">
-              Discover promising sites, see which state housing laws open them up, and know exactly what still needs checking. Every Santa Ana parcel: pass, fail or unknown, with sources.
+            <p className="mt-6 max-w-[520px] text-[19px] leading-[1.6] text-[#4a5568]">
+              Find promising sites, see which state laws unlock them, and know what's left to check.
             </p>
 
             <div className="mt-7 flex gap-2">
@@ -188,10 +186,8 @@ export default function Home() {
                   className="flex-1 bg-transparent py-3 text-[17px] text-[#14284b] outline-none placeholder:text-[#8a8f9c]" />
                 <button aria-label="Find sites" className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1f3a5f] text-xl text-white shadow-lg transition hover:scale-105 hover:bg-[#28497a]">→</button>
               </div>
+              {((mode === "ask" && (parsed.chips.length > 0 || text)) || (mode === "apn" && q)) && (
               <div className="mt-1 flex flex-wrap items-center gap-2 pb-1 text-[12.5px] text-[#5b6475]">
-                <select value={size} onChange={(e) => setSize(e.target.value)} className="rounded-full bg-[#f4efe8] px-3 py-1 text-[12.5px] font-medium text-[#1f3a5f]">
-                  {Object.entries(SIZES).map(([k, v]) => <option key={k} value={k}>Santa Ana · {v.label}</option>)}
-                </select>
                 {mode === "ask" && parsed.chips.map((c) => (
                   <span key={c.id} className="flex items-center gap-1.5 rounded-full bg-[#1f3a5f]/10 px-3 py-1 font-semibold text-[#1f3a5f]">
                     {c.label}<button type="button" onClick={() => setParsed(removeChip(parsed, c.id))} className="opacity-60 hover:text-[#e0641f]">×</button>
@@ -200,6 +196,7 @@ export default function Home() {
                 {mode === "ask" && text && parsed.chips.length === 0 && <span>No filters recognized yet. Try vacant, transit, half an acre, church, public land.</span>}
                 {mode === "apn" && q && <span className="flex items-center gap-1.5 rounded-full bg-[#1f3a5f]/10 px-3 py-1 font-semibold text-[#1f3a5f]">“{q}”<button type="button" onClick={() => { setQ(""); setText(""); }} className="opacity-60">×</button></span>}
               </div>
+              )}
             </form>
             <div className="mt-3 flex flex-wrap items-center gap-2 text-[12.5px] text-[#33415c]">
               <span>Try:</span>
