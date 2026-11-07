@@ -1,0 +1,36 @@
+{
+  "about": "City layer for Santa Ana. Zone descriptions come from the city's own zoning service. The category for each zone is OUR mapping of that description, not a city determination: 'review' means the zone needs a person to read the code (specific plans, specific developments, mixed zones).",
+  "city": "Santa Ana",
+  "checked": "2026-11-07",
+  "zoning_source": {"title": "City of Santa Ana: Zoning Classifications (ArcGIS FeatureServer)", "url": "https://gis.santa-ana.org/server/rest/services/Public/PBA_ZoningClassifications/FeatureServer/0"},
+  "incorporated": {"value": true, "source": "Santa Ana is an incorporated city (it publishes its own zoning ordinance and GIS)."},
+  "urbanized": {
+    "value": true,
+    "source": "US Census TIGERweb, 2020 Urban Areas (Corrected), layer 88: a point in central Santa Ana (-117.8678, 33.7455) returns 'Los Angeles--Long Beach--Anaheim, CA Urban Area' (UA 51445). Queried 2026-11-07.",
+    "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/88",
+    "note": "The 2020 Census replaced 'urbanized area' and 'urban cluster' with a single 'urban area' type. Confirm how the statute's term maps to it."
+  },
+  "zones": {
+    "R1": {"desc": "Single-Family Residence", "category": "single_family"},
+    "RE": {"desc": "Residential-Estate", "category": "single_family", "note": "ASSUMPTION: treated as single-family from the name. Confirm in the Santa Ana Municipal Code."},
+    "R2": {"desc": "Two-Family Residence", "category": "review", "note": "Allows two units. Whether it counts as 'multifamily' for SB 684 needs a person to check."},
+    "R3": {"desc": "Multiple-Family Residence", "category": "multifamily"},
+    "R4": {"desc": "Suburban Apartment", "category": "multifamily"},
+    "CR": {"desc": "Commercial Residential", "category": "mixed_use", "also": ["commercial"]},
+    "C1": {"desc": "Community Commercial", "category": "commercial"},
+    "C1-MD": {"desc": "Community Commercial - Museum District", "category": "commercial"},
+    "C2": {"desc": "General Commercial", "category": "commercial"},
+    "C4": {"desc": "Planned Shopping Center", "category": "commercial"},
+    "C5": {"desc": "Arterial Commercial", "category": "commercial"},
+    "CSM": {"desc": "South Main Street Commercial District", "category": "commercial"},
+    "P": {"desc": "Professional", "category": "commercial", "note": "Professional (office) zone. AB 2011 covers zones that allow office uses."},
+    "GC": {"desc": "Government Center", "category": "other"},
+    "M1": {"desc": "Light Industrial", "category": "light_industrial"},
+    "M2": {"desc": "Heavy Industrial", "category": "heavy_industrial"},
+    "O": {"desc": "Open Space Land", "category": "other"},
+    "A1": {"desc": "General Agricultural", "category": "other"},
+    "OZ1": {"desc": "Metro East Overlay Zone", "category": "review"},
+    "SD*": {"desc": "Specific Development", "category": "review", "note": "Each Specific Development has its own rules. Read the ordinance."},
+    "SP*": {"desc": "Specific Plan", "category": "review", "note": "Each Specific Plan has its own rules. Read the plan."}
+  }
+}

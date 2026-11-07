@@ -1,0 +1,81 @@
+{
+  "about": "Site tests for each land pathway. Every test cites the HCD Housing Law Fact Sheet (April 2026 versions) it was taken from. A fact sheet summary is not the statute: confirm against the Government Code before relying on any result. Tests whose data we do not have always return 'unknown'. Prototype only, not legal advice.",
+  "checked": "2026-11-07",
+  "sources": {
+    "hcd_sb9": {"title": "HCD Housing Law Fact Sheet: Duplexes and Lot Splits (SB 9), April 2026", "url": "https://www.hcd.ca.gov/sites/default/files/docs/planning-and-community/lot-splits-and-duplexes-sb-9.pdf", "statute": "Gov. Code §§ 65852.21, 66411.7"},
+    "hcd_sb4": {"title": "HCD Housing Law Fact Sheet: Affordable Housing on Faith & Higher Education Lands Act (SB 4), April 2026", "url": "https://www.hcd.ca.gov/sites/default/files/docs/planning-and-community/aff-hsg-faith-higher-ed-sb-4.pdf", "statute": "Gov. Code § 65913.16"},
+    "hcd_shra": {"title": "HCD Housing Law Fact Sheets (combined): Starter Home Revitalization Act (SB 684 / SB 1123), April 2026", "url": "https://www.hcd.ca.gov/sites/default/files/docs/planning-and-community/housing-law-fact-sheets.pdf", "statute": "Gov. Code §§ 65852.28, 65913.4.5, 66499.41"},
+    "hcd_ab2011": {"title": "HCD Housing Law Fact Sheets (combined): Affordable Housing & High Road Jobs Act (AB 2011), April 2026", "url": "https://www.hcd.ca.gov/sites/default/files/docs/planning-and-community/housing-law-fact-sheets.pdf", "statute": "Gov. Code §§ 65912.100-65912.140"}
+  },
+  "laws": [
+    {
+      "id": "SB9",
+      "name": "SB 9: duplex and/or lot split",
+      "what": "Up to two primary units on a single-family lot, and/or splitting it into two lots (up to two units on each).",
+      "source": "hcd_sb9",
+      "tests": [
+        {"id": "sf_zone", "label": "Zoned single-family residential", "check": "zone_category_in", "args": ["single_family"], "quote": "A lot zoned for single-family residential within an urbanized area may be developed by right"},
+        {"id": "urbanized", "label": "Inside an urbanized area", "check": "city_urbanized", "quote": "within an urbanized area"},
+        {"id": "no_flood", "label": "Not in a special flood hazard area (one of the Gov. Code 65913.4(a)(6) exclusions)", "check": "not_sfha", "quote": "Specified environmentally sensitive, hazardous, or protected lands ... as listed in Government Code section 65913.4, subdivision (a)(6)(B)-(K)"},
+        {"id": "no_vhfhsz", "label": "Not in a very high fire hazard severity zone (65913.4(a)(6) exclusion)", "check": "not_vhfhsz", "quote": "as listed in Government Code section 65913.4, subdivision (a)(6)(B)-(K)"},
+        {"id": "not_historic", "label": "Not a contributing structure in a historic district or a listed historical resource", "check": "unknown", "why": "No historic-district layer loaded for Santa Ana yet.", "quote": "A contributing structure within a historic district or a historical resource on the State Historic Resource Inventory"},
+        {"id": "no_tenant_3yr", "label": "Does not demolish or alter housing occupied by a tenant in the last 3 years", "check": "unknown", "why": "Tenancy history is not public data (and would be personal information).", "quote": "Has been occupied by a tenant in the last three years."},
+        {"id": "no_ellis", "label": "No Ellis Act withdrawal in the last 15 years", "check": "unknown", "why": "No public Ellis Act layer found.", "quote": "A parcel where units were withdrawn from the rental market pursuant to the Ellis Act in the last 15 years."},
+        {"id": "not_prior_split", "label": "Not created by a previous SB 9 lot split", "check": "unknown", "why": "Lot-split history is not in the parcel layer.", "quote": "Parcels previously created under SB 9 lot split provisions are not eligible for further lot splits."}
+      ]
+    },
+    {
+      "id": "SHRA_SB684",
+      "name": "SB 684: small-lot subdivision, multifamily zone (up to 10 homes)",
+      "what": "Ministerial approval of up to 10 lots / 10 units on an urban lot zoned for multifamily residential use.",
+      "source": "hcd_shra",
+      "tests": [
+        {"id": "mf_zone", "label": "Zoned for multifamily residential use", "check": "zone_category_in", "args": ["multifamily", "mixed_use"], "quote": "urban lots under five acres zoned for multifamily residential use"},
+        {"id": "size_5ac", "label": "Lot is 5 acres or smaller", "check": "acres_max", "args": [5], "conflict": "The fact sheet says 'under five acres' in its introduction and '5 acres or less' in its SB 684 summary. A parcel of exactly 5 acres is flagged for review.", "quote": "urban lots of 5 acres or less"},
+        {"id": "incorporated", "label": "In an incorporated city", "check": "city_incorporated", "quote": "located in incorporated cities or large urban counties"},
+        {"id": "no_fire", "label": "Not in a fire hazard zone", "check": "not_vhfhsz", "note": "The fact sheet says 'fire hazard zones' without naming a severity level. We check very-high only; read Gov. Code 65852.28 for the exact test.", "quote": "Environmentally sensitive areas, including farmland, wetlands, and fire hazard zones, are ineligible"},
+        {"id": "no_tenant", "label": "Does not displace rent-controlled or tenant-occupied housing", "check": "unknown", "why": "Tenancy and rent-control status per unit are not public data.", "quote": "prohibiting redevelopment that displaces rent-controlled or tenant-occupied housing"},
+        {"id": "no_wetland_farm", "label": "Not wetlands or farmland", "check": "unknown", "why": "No wetlands or farmland layer loaded yet.", "quote": "including farmland, wetlands"}
+      ]
+    },
+    {
+      "id": "SHRA_SB1123",
+      "name": "SB 1123: small-lot subdivision, vacant single-family lot (up to 10 homes)",
+      "what": "Extends SB 684's streamlined process to vacant lots in single-family zones (effective July 1, 2025).",
+      "source": "hcd_shra",
+      "tests": [
+        {"id": "sf_zone", "label": "Zoned single-family", "check": "zone_category_in", "args": ["single_family"], "quote": "enabling property owners in single-family zones to utilize the same streamlined, ministerial approval process"},
+        {"id": "vacant", "label": "Lot is vacant (no building footprint)", "check": "vacant", "quote": "Expansion of Streamlined Housing Approvals for Vacant Single-Family Lots"},
+        {"id": "size_limit", "label": "Meets the SB 1123 lot-size limit", "check": "unknown", "why": "The HCD fact sheet does not state the size limit for single-family lots. Read Gov. Code 66499.41 before using this pathway.", "quote": ""},
+        {"id": "no_fire", "label": "Not in a fire hazard zone", "check": "not_vhfhsz", "quote": "Environmentally sensitive areas, including farmland, wetlands, and fire hazard zones, are ineligible"}
+      ]
+    },
+    {
+      "id": "AB2011",
+      "name": "AB 2011: housing on commercial land",
+      "what": "By-right 100% affordable or mixed-income housing on sites that allow office, retail or parking uses.",
+      "source": "hcd_ab2011",
+      "tests": [
+        {"id": "commercial_zone", "label": "Zone allows commercial uses (office, retail, parking)", "check": "zone_category_in", "args": ["commercial"], "quote": "streamlined, ministerial review process for housing projects on sites that allow commercial uses (office, retail, and parking)"},
+        {"id": "site_criteria", "label": "Meets AB 2011's environmental, vacant-site, replacement-housing and density criteria", "check": "unknown", "why": "The HCD fact sheet lists these only by category. Read Gov. Code 65912.111 (100% affordable) or 65912.121 (mixed-income).", "quote": "environmental criteria, replacement housing, limitations for vacant sites, and specified densities"},
+        {"id": "city_exempt", "label": "Not exempted by Santa Ana under AB 2011's exempt-and-replace option", "check": "unknown", "why": "HCD sent Santa Ana a technical assistance letter on parcel exemptions (Dec 10, 2024). Check the city's adopted ordinance for this APN.", "quote": "Parcel exemptions are allowed only if local governments provide written findings demonstrating no net loss in housing capacity"}
+      ]
+    },
+    {
+      "id": "SB4",
+      "name": "SB 4: faith or nonprofit-college land",
+      "what": "By-right 100% affordable housing on land owned by a religious institution or independent college as of Jan 1, 2024. Allowed in all zones.",
+      "source": "hcd_sb4",
+      "tests": [
+        {"id": "faith_owned", "label": "Owned by a religious institution or independent college as of Jan 1, 2024", "check": "worship_proxy", "quote": "the property must have been owned by a religious institution or independent higher education institution (including through an affiliated nonprofit) as of January 1, 2024"},
+        {"id": "urbanized", "label": "City includes part of an urbanized area or urban cluster", "check": "city_urbanized", "quote": "a city where the city boundaries include some portion of an urbanized area or urban cluster"},
+        {"id": "no_vhfhsz", "label": "Not in a very high fire hazard severity zone", "check": "not_vhfhsz", "quote": "very high fire hazard severity zone"},
+        {"id": "no_sfha", "label": "Not in a special flood hazard area", "check": "not_sfha", "quote": "special flood hazard area"},
+        {"id": "no_heavy_ind", "label": "Not within 1,200 ft of land zoned heavy industrial", "check": "not_near_zone", "args": ["heavy_industrial", 1200], "note": "The fact sheet says 'a site permitted for heavy industrial use'. We use heavy-industrial zoning as a proxy for that.", "quote": "Within 1,200 feet of a site permitted for heavy industrial use"},
+        {"id": "urban_perimeter", "label": "At least 75% of the site's perimeter adjoins urban uses", "check": "unknown", "why": "Not computed in this prototype.", "quote": "At least 75 percent of the perimeter of the site adjoins parcels that are developed with urban uses."},
+        {"id": "no_fault", "label": "Not in an earthquake fault zone", "check": "unknown", "why": "The CGS fault-zone service requires a token; not loaded.", "quote": "earthquake fault zone"},
+        {"id": "no_light_ind_adj", "label": "Not next to a site that is more than one-third light industrial", "check": "unknown", "why": "Not computed in this prototype.", "quote": "Adjacent to a site where more than one-third of the square footage is dedicated to light industrial use"}
+      ]
+    }
+  ]
+}
