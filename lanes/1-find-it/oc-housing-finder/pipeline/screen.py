@@ -415,6 +415,7 @@ def main():
                           "he_stale": facts["he_may_be_stale"], "surplus": bool(sl), "worship_lead": bool(w_hits),
                           "sfha": sfha, "vhfhsz": vhfhsz, "transit": bool(transit), "zone_conflict": zone_conflict},
                 "acres": round(acres, 3), "zone": zcode or scag_code,
+                "zcat": (zi or {}).get("category"),
             },
             "_detail": {"facts": facts, "results": results},
         })
@@ -464,6 +465,26 @@ def main():
             "Fire hazard zones come from the OC county LRA copy and CAL FIRE's statewide SRA layer. CAL FIRE's 2025 LRA maps were not loaded.",
         ],
     }
+    # --- overlay layers for the map toggles (small, simplified)
+    os.makedirs(os.path.join(OUT, "layers"), exist_ok=True)
+
+    def dump_layer(name, items, keep):
+        feats = []
+        for g, pr in items:
+            gs = g.simplify(0.00005, preserve_topology=True)
+            feats.append({"type": "Feature", "properties": {k: pr.get(k) for k in keep},
+                          "geometry": json.loads(json.dumps(mapping(gs)), parse_float=lambda x: round(float(x), 5))})
+        with open(os.path.join(OUT, "layers", name), "w") as fh:
+            json.dump({"type": "FeatureCollection", "features": feats}, fh, separators=(",", ":"))
+
+    # HQTA polygons overlap heavily; merge them into one shape so the map overlay isn't stacked
+    from shapely.ops import unary_union
+    merged = unary_union([g for g, _ in hqta.items]) if hqta.items else None
+    dump_layer("transit_hqta.geojson", [(merged, {"hqta_type": "merged high-quality transit areas"})] if merged else [],
+               ["hqta_type"])
+    dump_layer("flood_sfha.geojson", [(g, pr) for g, pr in flood.items if str(pr.get("SFHA_TF")) == "T"],
+               ["FLD_ZONE", "ZONE_SUBTY"])
+
     with open(os.path.join(OUT, "meta.json"), "w") as fh:
         json.dump(meta, fh, indent=1, default=str)
     print(f"done in {time.time() - t0:.0f}s: {dict(stats)}; per law: {dict(law_counts)}")

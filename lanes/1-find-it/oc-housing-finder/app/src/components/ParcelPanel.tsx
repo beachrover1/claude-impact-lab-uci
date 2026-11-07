@@ -3,21 +3,15 @@ import { useEffect, useState } from "react";
 import type { Detail, Feature, Meta, Status, Weights } from "@/lib/types";
 import { COMPONENT_LABELS, expandTests, score } from "@/lib/types";
 import { draftEmail, explain } from "@/lib/explain";
+import { LABEL_COLOR, LAW_SHORT, loadDetail } from "@/lib/detail";
+import ScoreRing from "./ScoreRing";
 
 const ICON: Record<Status, string> = { pass: "✅", fail: "❌", unknown: "❓", lead: "🔎" };
 const STATUS_TEXT: Record<Status, string> = { pass: "Pass", fail: "Fail", unknown: "Could not check", lead: "Lead, not fact" };
 
-const cache: Record<string, Record<string, Detail>> = {};
-async function loadDetail(apn: string): Promise<Detail | null> {
-  const book = apn.slice(0, 3);
-  if (!cache[book]) {
-    const r = await fetch(`data/detail/${book}.json`);
-    cache[book] = r.ok ? await r.json() : {};
-  }
-  return cache[book][apn] ?? null;
-}
-
-export default function ParcelPanel({ f, meta, weights, onClose }: { f: Feature; meta: Meta; weights: Weights; onClose: () => void }) {
+export default function ParcelPanel({ f, meta, weights, onClose, inCompare, onToggleCompare, compareFull }: {
+  f: Feature; meta: Meta; weights: Weights; onClose: () => void; inCompare: boolean; onToggleCompare: () => void; compareFull: boolean;
+}) {
   const p = f.properties;
   const [d, setD] = useState<Detail | null>(null);
   const [showEmail, setShowEmail] = useState(false);
@@ -29,36 +23,54 @@ export default function ParcelPanel({ f, meta, weights, onClose }: { f: Feature;
 
   const ex = d ? explain(p, d, meta) : null;
   const srcs = meta.laws.sources;
+  const s = score(p.components, weights);
+  const possible = Object.entries(p.laws).filter(([, v]) => v === "possible").map(([k]) => LAW_SHORT[k]);
 
   return (
     <div className="flex h-full flex-col overflow-y-auto bg-white text-sm">
-      <div className="sticky top-0 z-10 border-b bg-white px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <div className="text-base font-semibold text-ink">{p.address ?? "No site address"}</div>
-            <div className="text-xs text-stone-500">APN {p.apn} · zone {p.zone ?? "unknown"} · {p.acres} ac (computed)</div>
+      <div className="sticky top-0 z-10 border-b border-slate-200 bg-white px-5 py-4">
+        <div className="flex items-start gap-3">
+          <ScoreRing score={s} size={56} />
+          <div className="min-w-0 flex-1">
+            <div className="truncate text-base font-semibold text-slate-900">{p.address ?? "No site address"}</div>
+            <div className="text-xs text-slate-500">APN {p.apn} · Santa Ana {p.zip ?? ""}</div>
+            <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+              <span className="flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                <span className="h-1.5 w-1.5 rounded-full" style={{ background: LABEL_COLOR[p.label] }} />{p.label}
+              </span>
+              {possible.map((l) => <span key={l} className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">{l}</span>)}
+            </div>
           </div>
-          <button onClick={onClose} className="rounded px-2 py-1 text-stone-500 hover:bg-stone-100" aria-label="Close">✕</button>
+          <button onClick={onClose} className="rounded-lg px-2 py-1 text-slate-400 hover:bg-slate-100" aria-label="Close">✕</button>
         </div>
-        <div className="mt-2 flex items-center gap-2">
-          <span className="rounded-full bg-stone-100 px-2 py-0.5 text-xs font-medium">{p.label}</span>
-          <span className="text-xs text-stone-600">Score {score(p.components, weights)}/100 <span className="text-amber-700">(ASSUMPTION weights)</span></span>
+        <div className="mt-3 grid grid-cols-4 gap-2 text-center">
+          <Kpi label="Lot" value={`${p.acres} ac`} />
+          <Kpi label="Zone" value={p.zone ?? "?"} />
+          <Kpi label="Built" value={d?.facts.building_coverage != null ? `${Math.round(d.facts.building_coverage * 100)}%` : d ? "0%" : "…"} />
+          <Kpi label="Transit" value={p.flags.transit ? "Yes" : "No"} />
+        </div>
+        <div className="mt-3 flex items-center justify-between">
+          <span className="text-[11px] text-amber-700">Score uses ASSUMPTION weights</span>
+          <button onClick={onToggleCompare} disabled={!inCompare && compareFull}
+            className={`rounded-lg px-3 py-1 text-xs font-medium ${inCompare ? "bg-emerald-500 text-white" : "border border-slate-200 text-slate-700 hover:bg-slate-50 disabled:opacity-40"}`}>
+            {inCompare ? "✓ In compare" : "+ Compare"}
+          </button>
         </div>
       </div>
 
-      {!d && <div className="p-4 text-stone-500">Loading details…</div>}
+      {!d && <div className="p-4 text-slate-500">Loading details…</div>}
       {d && ex && (
-        <div className="space-y-5 p-4">
+        <div className="space-y-5 p-5">
           <section>
-            <h3 className="mb-1 font-semibold text-ink">Why this site</h3>
-            <p className="mb-2 text-xs text-stone-500">Written from the test results below. Each line is marked as verified data, an estimate, or something to confirm.</p>
+            <h3 className="mb-1 font-semibold text-slate-900">Why this site</h3>
+            <p className="mb-2 text-xs text-slate-500">Written from the test results below. Each line is marked as verified data, an estimate, or something to confirm.</p>
             <List title="Verified in public data" items={ex.verified} cls="text-emerald-800" />
-            <List title="Estimates" items={ex.estimates} cls="text-stone-700" />
+            <List title="Estimates" items={ex.estimates} cls="text-slate-700" />
             <List title="Needs confirmation" items={ex.confirm} cls="text-amber-800" />
           </section>
 
           <section>
-            <h3 className="mb-2 font-semibold text-ink">Law-by-law site tests</h3>
+            <h3 className="mb-2 font-semibold text-slate-900">Law-by-law site tests</h3>
             {meta.laws.laws.map((law) => {
               const r = d.results[law.id];
               if (!r) return null;
@@ -73,10 +85,10 @@ export default function ParcelPanel({ f, meta, weights, onClose }: { f: Feature;
                 <details key={law.id} open={r.status === "possible" || r.status === "unclear"} className="mb-2 rounded border">
                   <summary className="cursor-pointer px-3 py-2">
                     <span className="font-medium">{law.name}</span>{" "}
-                    <span className={r.status === "possible" ? "text-emerald-700" : r.status === "unclear" ? "text-amber-700" : "text-stone-500"}>· {head}</span>
+                    <span className={r.status === "possible" ? "text-emerald-700" : r.status === "unclear" ? "text-amber-700" : "text-slate-500"}>· {head}</span>
                   </summary>
                   <div className="border-t px-3 py-2">
-                    <p className="mb-2 text-xs text-stone-600">{law.what}</p>
+                    <p className="mb-2 text-xs text-slate-600">{law.what}</p>
                     <table className="w-full text-xs">
                       <tbody>
                         {tests.map((t) => {
@@ -86,9 +98,9 @@ export default function ParcelPanel({ f, meta, weights, onClose }: { f: Feature;
                               <td className="w-6 py-1">{ICON[t.status]}</td>
                               <td className="py-1">
                                 <div className="font-medium">{rule?.label}</div>
-                                <div className="text-stone-500">{STATUS_TEXT[t.status]}: {t.why}</div>
+                                <div className="text-slate-500">{STATUS_TEXT[t.status]}: {t.why}</div>
                                 {rule?.note && <div className="text-amber-700">Note: {rule.note}</div>}
-                                {rule?.quote && <div className="italic text-stone-400">“{rule.quote}”</div>}
+                                {rule?.quote && <div className="italic text-slate-400">“{rule.quote}”</div>}
                               </td>
                             </tr>
                           );
@@ -105,14 +117,14 @@ export default function ParcelPanel({ f, meta, weights, onClose }: { f: Feature;
           </section>
 
           <section>
-            <h3 className="mb-2 font-semibold text-ink">Score breakdown</h3>
+            <h3 className="mb-2 font-semibold text-slate-900">Score breakdown</h3>
             <table className="w-full text-xs">
               <tbody>
                 {(Object.keys(COMPONENT_LABELS) as (keyof Weights)[]).map((k) => (
                   <tr key={k} className="border-t">
                     <td className="py-1">{COMPONENT_LABELS[k]}</td>
                     <td className="py-1 text-right">{Math.round(p.components[k] * 100)}%</td>
-                    <td className="py-1 pl-2 text-right text-stone-500">weight {weights[k]}</td>
+                    <td className="py-1 pl-2 text-right text-slate-500">weight {weights[k]}</td>
                   </tr>
                 ))}
               </tbody>
@@ -122,19 +134,19 @@ export default function ParcelPanel({ f, meta, weights, onClose }: { f: Feature;
 
           {d.facts.surplus_notice && (
             <section>
-              <h3 className="mb-1 font-semibold text-ink">Surplus Land Act notice</h3>
-              <pre className="whitespace-pre-wrap rounded bg-stone-50 p-2 text-xs">{JSON.stringify(d.facts.surplus_notice, null, 1)}</pre>
+              <h3 className="mb-1 font-semibold text-slate-900">Surplus Land Act notice</h3>
+              <pre className="whitespace-pre-wrap rounded bg-slate-50 p-2 text-xs">{JSON.stringify(d.facts.surplus_notice, null, 1)}</pre>
             </section>
           )}
 
           <section>
-            <button onClick={() => setShowEmail((s) => !s)} className="rounded border border-clay px-3 py-1.5 text-clay hover:bg-orange-50">
+            <button onClick={() => setShowEmail((s) => !s)} className="rounded border border-emerald-500 px-3 py-1.5 text-emerald-700 hover:bg-emerald-50">
               {showEmail ? "Hide" : "Draft"} a question to city planning
             </button>
             {showEmail && (
               <div className="mt-2">
                 <textarea readOnly className="h-64 w-full rounded border p-2 font-mono text-xs" value={draftEmail(p, d, meta)} />
-                <p className="text-xs text-stone-500">Draft only. Copy it into your own email. This tool never sends anything.</p>
+                <p className="text-xs text-slate-500">Draft only. Copy it into your own email. This tool never sends anything.</p>
               </div>
             )}
           </section>
@@ -144,11 +156,20 @@ export default function ParcelPanel({ f, meta, weights, onClose }: { f: Feature;
   );
 }
 
+function Kpi({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg bg-slate-50 px-2 py-1.5">
+      <div className="text-[10px] uppercase tracking-wide text-slate-400">{label}</div>
+      <div className="truncate text-sm font-semibold text-slate-800">{value}</div>
+    </div>
+  );
+}
+
 function List({ title, items, cls }: { title: string; items: string[]; cls: string }) {
   if (!items.length) return null;
   return (
     <div className="mb-2">
-      <div className="text-xs font-semibold uppercase tracking-wide text-stone-500">{title}</div>
+      <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{title}</div>
       <ul className={`list-disc pl-5 ${cls}`}>
         {items.map((x, i) => (
           <li key={i}>{x}</li>

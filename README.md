@@ -38,11 +38,22 @@ HCD fact sheet it came from, and there's a draft question for city planning they
   APN, sizes like `"9,005 SF"` parsed into acres, and archived notices flagged.
 - **Source conflicts shown, not hidden:** when the city's zoning layer and SCAG's 2024 layer disagree, the parcel
   is marked *Needs review*.
-- **Transparent score** with adjustable weights (labelled ASSUMPTION), a ranked top-10 call list,
-  CSV export, and a plain-language "why this site" split into *verified / estimate / needs
-  confirmation*.
+- **Transparent score** with adjustable weights (labelled ASSUMPTION), a ranked call list of
+  parcel cards with score rings, CSV export, and a plain-language "why this site" split into
+  *verified / estimate / needs confirmation*.
+- **Map layers you can toggle:** zoning (colored by zone type), Caltrans high-quality transit
+  areas, FEMA flood hazard areas, and public land (surplus-land notices).
+- **Hover** any parcel for its address and score. **Click** for the full panel.
+- **Site assistant on the map:** ask about the selected parcel ("What could block it?",
+  "Which law fits best?", "Who should I call?"). In this build it answers only from that parcel's
+  screening data, with no LLM, so it cannot invent facts. It says so on screen.
+- **Compare up to 3 parcels** side by side: every law, hazard, vacancy and score component.
 
-![Top-ranked site: a vacant R1 lot at 2019 N Grand Ave, with law-by-law results](docs/screenshots/top-site-2019-n-grand.jpg)
+![Top-ranked site: a vacant R1 lot at 2019 N Grand Ave, with the parcel panel and site assistant](docs/screenshots/top-site-2019-n-grand.jpg)
+
+| Map layers: zoning, transit, flood, public land | Compare up to 3 parcels |
+|---|---|
+| ![Layers](docs/screenshots/layers.jpg) | ![Compare](docs/screenshots/compare.jpg) |
 
 **Demo video:** [link]
 **Live demo:** [optional]
@@ -79,7 +90,7 @@ About 12,000 Santa Ana parcels are in zones marked "needs review" (specific plan
 
 - **Building it:** Claude (Claude Code) read the HCD fact sheets, turned each law into tests with quotes,
   inspected every data layer's fields, and wrote the pipeline and the app with the team.
-- **At runtime:** the "why this site" text and the draft email are templates filled from the test results,
+- **At runtime:** the "why this site" text, the site assistant's answers and the draft email are built from the test results,
   so the tool works with no API key and every sentence traces to a test. A person must confirm
   every ❓ item, ownership, and the city's objective standards.
 
@@ -129,6 +140,7 @@ python3 -m venv .venv && .venv/bin/pip install -r pipeline/requirements.txt
 | "Possibly underused" = improvements < 50% of land value | **ASSUMPTION**: weak signal in OC, where land value dominates | |
 | Capacity score = acres / 0.5, capped | **ASSUMPTION**: not a density calculation | |
 | SB 9-only parcels shown only if vacant or surplus | **ASSUMPTION**: SB 9 alone allows at most 4 units | |
+| Project size presets: 4–12 homes = 0.15–5 ac; 13–50 homes = 0.5–10 ac | **ASSUMPTION**: lot-size ranges, not a density calculation | |
 | Zone categories (R1 = single-family, etc.) | **ASSUMPTION**: our reading of the city's zone descriptions; RE treated as single-family; R2, specific plans and specific developments marked "needs review" | |
 
 ## What is real and what is mocked
@@ -139,7 +151,9 @@ python3 -m venv .venv && .venv/bin/pip install -r pipeline/requirements.txt
 | Law tests | Working for the tests listed; others always return ❓ "could not check" |
 | SB 4 ownership | Lead only (places of worship). Not ownership data |
 | Housing-element sites | Not available for Santa Ana (see below) |
-| "Why this site" text and draft email | Templates from the test results, not an LLM. The email is never sent |
+| "Why this site" text, site assistant and draft email | Built from the test results, not an LLM. The email is never sent |
+| City selector | Santa Ana only; other cities are shown as "soon" |
+| User profile | "Guest" placeholder; no accounts |
 | Score | Working, but the weights are ASSUMPTIONS |
 
 ## Where it gets things wrong
