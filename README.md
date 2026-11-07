@@ -56,6 +56,8 @@ HCD fact sheet it came from, and there's a draft question for city planning they
 - **Ranked call list:** each card has a stacked factor × weight bar, an inline breakdown
   (points per factor) and pathway checks taken from the real test results (✓ / ? / ✕ with the failing test).
 
+![Home: sunset Orange County skyline, plain-English search and live stats](docs/screenshots/hero.jpg)
+
 ![The workbench: plain-English search, scoring studio, map with ranked pins, call list and screening funnel](docs/screenshots/workbench.jpg)
 
 | Map layers: zoning, transit, flood, public land | Compare up to 3 parcels |

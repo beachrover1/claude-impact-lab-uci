@@ -12,7 +12,7 @@ import SourcesModal from "@/components/SourcesModal";
 import CompareModal from "@/components/CompareModal";
 import CallCard from "@/components/CallCard";
 import { AssistantCard, Funnel, HeadToHead, WeightsChart } from "@/components/Workbench";
-import HeroArt from "@/components/HeroArt";
+import HeroSunset from "@/components/HeroSunset";
 
 const MapView = dynamic(() => import("@/components/MapView"), {
   ssr: false,
@@ -128,68 +128,133 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#FAF7F2]">
-      {/* Top bar */}
-      <header className="sticky top-0 z-[1500] border-b border-[#E9E2D6] bg-[#FAF7F2]/90 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-[1500px] items-center gap-6 px-6">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#1f3a5f] text-lg text-[#e2b33c] shadow-sm">⌂</div>
-            <span className="font-display text-[19px] font-semibold tracking-tight">OC Housing Finder</span>
-            <span className="rounded-md bg-[#c2562e] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">Prototype</span>
+      {/* Hero: sunset OC skyline */}
+      <div className="relative overflow-hidden bg-[linear-gradient(180deg,#d7e6f3_0%,#f3e5dc_42%,#ffe6cc_78%,#ffd9b3_100%)]">
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,#fff3e6_0%,rgba(255,243,230,.92)_30%,rgba(255,243,230,0)_60%)]" />
+        <HeroSunset />
+        <header className="relative z-[1500] mx-auto flex h-20 max-w-[1500px] items-center gap-4 px-6">
+          <div className="flex items-center gap-3 rounded-2xl bg-white/70 py-2 pl-2 pr-4 shadow-sm backdrop-blur">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f3a5f] text-xl text-[#ffb54d] shadow">⌂</div>
+            <span className="text-[18px] font-bold tracking-tight text-[#1f3a5f]">OC Housing Finder</span>
+            <span className="rounded-full bg-[#f07a2c] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-sm">Prototype</span>
           </div>
-          <nav className="hidden gap-1 text-sm md:flex">
-            <span className="rounded-lg bg-[#efe9df] px-3 py-1.5 font-semibold">Workbench</span>
-            <button onClick={() => setShowSources(true)} className="rounded-lg px-3 py-1.5 text-[#6B6458] hover:bg-[#efe9df]">Sources & assumptions</button>
+          <nav className="hidden items-center gap-1 rounded-full bg-white/60 p-1 text-sm shadow-sm backdrop-blur md:flex">
+            <span className="rounded-full bg-white px-4 py-1.5 font-semibold text-[#1f3a5f] shadow-sm">Workbench</span>
+            <button onClick={() => setShowSources(true)} className="rounded-full px-4 py-1.5 text-[#33415c] hover:bg-white/70">Sources & assumptions</button>
           </nav>
           <div className="flex-1" />
-          <select value={size} onChange={(e) => setSize(e.target.value)} className="rounded-xl border border-[#E9E2D6] bg-white px-3 py-2 text-sm text-[#1B2433]" title="Project size (ASSUMPTION lot-size ranges)">
+          <select value={size} onChange={(e) => setSize(e.target.value)} className="rounded-full border border-white/70 bg-white/75 px-4 py-2 text-sm font-medium text-[#1f3a5f] shadow-sm backdrop-blur" title="Project size (ASSUMPTION lot-size ranges)">
             {Object.entries(SIZES).map(([k, v]) => <option key={k} value={k}>Santa Ana · {v.label}</option>)}
           </select>
-          <button onClick={exportCsv} className="rounded-xl border border-[#E9E2D6] bg-white px-4 py-2 text-sm font-semibold hover:bg-[#f6f1e8]">Export</button>
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#e2b33c] to-[#c2562e] text-sm font-bold text-white" title="Guest: no accounts in this prototype">G</div>
-        </div>
-      </header>
+          <button onClick={exportCsv} className="rounded-full border border-white/70 bg-white/75 px-5 py-2 text-sm font-semibold text-[#1f3a5f] shadow-sm backdrop-blur hover:bg-white">Export</button>
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#ffb54d] to-[#f07a2c] text-sm font-bold text-white shadow" title="Guest: no accounts in this prototype">G</div>
+        </header>
 
-      <main className="mx-auto max-w-[1500px] px-6 pb-16">
-        {/* Ask bar */}
-        <section className="relative -mx-6 overflow-hidden px-6 pb-48 pt-8">
-          <HeroArt />
-          <div className="relative mx-auto max-w-[1100px]">
-          <h1 className="font-display mb-1 text-[30px] font-semibold leading-tight tracking-tight text-[#1B2433]">Where can the next affordable home go?</h1>
-          <p className="mb-5 text-[14px] text-[#6B6458]">Every Santa Ana parcel, screened against California's land-opening housing laws. Pass, fail or unknown, with sources.</p>
-          <div className="mb-3 flex gap-2">
-            {(["ask", "apn"] as const).map((m) => (
-              <button key={m} onClick={() => setMode(m)} className={`rounded-full border px-3.5 py-1.5 text-[13px] font-medium ${mode === m ? "border-[#1f3a5f] bg-white text-[#1f3a5f]" : "border-[#E9E2D6] text-[#6B6458]"}`}>
-                {m === "ask" ? "Ask in plain English" : "Address / APN"}
-              </button>
-            ))}
+        <section className="relative mx-auto max-w-[1500px] px-6 pb-28 pt-10 md:pt-14">
+          <div className="absolute right-8 top-6 hidden items-center gap-3 rounded-2xl bg-white/80 px-5 py-3.5 shadow-lg backdrop-blur lg:flex">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#1f3a5f] text-2xl text-white">⌂</div>
+            <div className="leading-tight">
+              <div className="text-[17px] font-bold text-[#1f3a5f]">More Homes.</div>
+              <div className="text-[17px] font-bold text-[#1f3a5f]">A Stronger OC.</div>
+              <div className="mt-1 h-0.5 w-16 rounded bg-[#f07a2c]" />
+            </div>
           </div>
-          <form onSubmit={(e) => { e.preventDefault(); submit(text); }} className="flex items-center gap-3 rounded-2xl border-2 border-[#1f3a5f]/70 bg-white p-2 pl-5 shadow-[0_10px_30px_-18px_rgba(31,58,95,.6)]">
-            <span className="text-xl text-[#e2b33c]">✦</span>
-            <input value={text} onChange={(e) => setText(e.target.value)}
-              placeholder={mode === "ask" ? "e.g. Vacant single-family lots near transit, at least half an acre" : "e.g. 1111 N Bristol or 405-274-10"}
-              className="flex-1 bg-transparent py-2 text-[17px] outline-none placeholder:text-[#b5ad9f]" />
-            <button className="rounded-xl bg-[#1f3a5f] px-6 py-3 text-sm font-semibold text-white hover:bg-[#28497a]">Find sites</button>
-          </form>
-          <div className="mt-3 flex flex-wrap items-center gap-2 text-[12.5px] text-[#6B6458]">
-            {mode === "ask" && parsed.chips.length > 0 && <span>Filters from your question:</span>}
-            {mode === "ask" && parsed.chips.map((c) => (
-              <span key={c.id} className="flex items-center gap-1.5 rounded-full border border-[#E9E2D6] bg-white px-3 py-1 font-medium text-[#1B2433]">
-                {c.label}<button onClick={() => setParsed(removeChip(parsed, c.id))} className="text-[#9c958a] hover:text-[#c2562e]">×</button>
-              </span>
-            ))}
-            {mode === "ask" && text && parsed.chips.length === 0 && <span>No filters recognized. Try words like vacant, transit, half an acre, church, public land.</span>}
-            {mode === "apn" && q && <span className="flex items-center gap-1.5 rounded-full border border-[#E9E2D6] bg-white px-3 py-1 font-medium text-[#1B2433]">“{q}”<button onClick={() => { setQ(""); setText(""); }} className="text-[#9c958a]">×</button></span>}
-            <span className="ml-1">Try:</span>
-            {TRY.slice(1, 3).map((t) => (
-              <button key={t} onClick={() => { setMode("ask"); setText(t); setParsed(parseQuery(t)); setQ(""); }} className="rounded-full border border-dashed border-[#2a7f8f]/50 px-3 py-1 text-[#2a7f8f] hover:bg-[#2a7f8f]/5">{t}</button>
-            ))}
-            <span className="text-[11px] text-[#9c958a]">· keyword rules, not AI</span>
-          </div>
+
+          <div className="max-w-[760px]">
+            <div className="mb-4 flex items-center gap-3 text-[13px] font-bold uppercase tracking-[0.14em] text-[#e0641f]">
+              Housing site intelligence · Orange County <span className="h-px w-14 bg-[#e0641f]" />
+            </div>
+            <h1 className="font-display text-[44px] font-semibold leading-[1.05] tracking-tight text-[#14284b] md:text-[64px]">
+              Turn overlooked land into affordable homes.
+            </h1>
+            <p className="mt-5 max-w-[620px] text-[18px] leading-relaxed text-[#33415c]">
+              Discover promising sites, see which state housing laws open them up, and know exactly what still needs checking. Every Santa Ana parcel: pass, fail or unknown, with sources.
+            </p>
+
+            <div className="mt-7 flex gap-2">
+              {(["ask", "apn"] as const).map((m) => (
+                <button key={m} onClick={() => setMode(m)} className={`rounded-full px-4 py-1.5 text-[13px] font-semibold shadow-sm backdrop-blur ${mode === m ? "bg-[#1f3a5f] text-white" : "bg-white/70 text-[#33415c] hover:bg-white"}`}>
+                  {m === "ask" ? "Ask in plain English" : "Address / APN"}
+                </button>
+              ))}
+            </div>
+            <form onSubmit={(e) => { e.preventDefault(); submit(text); }} className="mt-3 rounded-[28px] bg-white/95 p-3 pl-6 shadow-[0_25px_60px_-25px_rgba(20,40,75,.55)] backdrop-blur">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl text-[#f07a2c]">✦</span>
+                <input value={text} onChange={(e) => setText(e.target.value)}
+                  placeholder={mode === "ask" ? "Vacant single-family lots near transit, at least half an acre…" : "1111 N Bristol or 405-274-10"}
+                  className="flex-1 bg-transparent py-3 text-[17px] text-[#14284b] outline-none placeholder:text-[#8a8f9c]" />
+                <button aria-label="Find sites" className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1f3a5f] text-xl text-white shadow-lg transition hover:scale-105 hover:bg-[#28497a]">→</button>
+              </div>
+              <div className="mt-1 flex flex-wrap items-center gap-2 pb-1 text-[12.5px] text-[#5b6475]">
+                <select value={size} onChange={(e) => setSize(e.target.value)} className="rounded-full bg-[#f4efe8] px-3 py-1 text-[12.5px] font-medium text-[#1f3a5f]">
+                  {Object.entries(SIZES).map(([k, v]) => <option key={k} value={k}>Santa Ana · {v.label}</option>)}
+                </select>
+                {mode === "ask" && parsed.chips.map((c) => (
+                  <span key={c.id} className="flex items-center gap-1.5 rounded-full bg-[#1f3a5f]/10 px-3 py-1 font-semibold text-[#1f3a5f]">
+                    {c.label}<button type="button" onClick={() => setParsed(removeChip(parsed, c.id))} className="opacity-60 hover:text-[#e0641f]">×</button>
+                  </span>
+                ))}
+                {mode === "ask" && text && parsed.chips.length === 0 && <span>No filters recognized yet. Try vacant, transit, half an acre, church, public land.</span>}
+                {mode === "apn" && q && <span className="flex items-center gap-1.5 rounded-full bg-[#1f3a5f]/10 px-3 py-1 font-semibold text-[#1f3a5f]">“{q}”<button type="button" onClick={() => { setQ(""); setText(""); }} className="opacity-60">×</button></span>}
+              </div>
+            </form>
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-[12.5px] text-[#33415c]">
+              <span>Try:</span>
+              {TRY.slice(1, 3).map((t) => (
+                <button key={t} onClick={() => { setMode("ask"); setText(t); setParsed(parseQuery(t)); setQ(""); }} className="rounded-full bg-white/70 px-3 py-1 font-medium text-[#1f3a5f] shadow-sm backdrop-blur hover:bg-white">{t}</button>
+              ))}
+              <span className="text-[11px] text-[#5b6475]">· keyword rules, not AI</span>
+            </div>
+
+            <div className="mt-8 flex flex-wrap items-center gap-2 text-[15px] font-semibold text-[#14284b]">
+              {[["📍", "Explore parcels", "explore"], ["🛡️", "Check eligibility", "eligibility"], ["✦", "Ask the assistant", "assistant"]].map(([ic, label, id], i) => (
+                <button key={id} onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                  className={`flex items-center gap-2.5 px-4 py-2 hover:text-[#e0641f] ${i ? "border-l border-[#14284b]/15" : ""}`}>
+                  <span className="text-lg">{ic}</span>{label}
+                </button>
+              ))}
+            </div>
           </div>
         </section>
+
+        {/* navy + orange swoosh */}
+        <svg className="pointer-events-none absolute inset-x-0 bottom-0 h-20 w-full" viewBox="0 0 1600 80" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0,62 C380,30 760,86 1100,52 C1300,32 1460,24 1600,30 V80 H0 Z" fill="#1f3a5f" />
+          <path d="M0,58 C380,26 760,82 1100,48 C1300,28 1460,20 1600,26" stroke="#f07a2c" strokeWidth="5" fill="none" />
+        </svg>
+      </div>
+
+      {/* stats band */}
+      <div className="bg-[#1f3a5f]">
+        <div className="mx-auto max-w-[1500px] px-6 pb-6">
+          <div className="flex flex-wrap items-center gap-4 rounded-[26px] border border-white/10 bg-white/[0.04] px-6 py-4 text-white">
+            {[
+              ["🏢", (meta?.counts.parcels_screened ?? 0).toLocaleString("en-US"), "Parcels screened"],
+              ["⭐", (meta?.counts["Potentially suitable"] ?? 0).toLocaleString("en-US"), "Potentially suitable"],
+              ["🏠", String(publicLand.length), "Public land leads"],
+              ["⚖️", "5", "State laws checked"],
+            ].map(([ic, n, l], i) => (
+              <div key={l} className={`flex min-w-[180px] flex-1 items-center gap-4 ${i ? "md:border-l md:border-white/15 md:pl-6" : ""}`}>
+                <span className="text-3xl">{ic}</span>
+                <div className="leading-tight">
+                  <div className="num text-[26px] font-bold">{n}</div>
+                  <div className="text-[14px] text-white/75">{l}</div>
+                </div>
+              </div>
+            ))}
+            <button onClick={() => document.getElementById("eligibility")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+              className="flex items-center gap-3 rounded-full border border-white/20 px-5 py-2.5 text-[14px] font-medium hover:bg-white/10">
+              <span className="text-[#7fd49b]">🌿</span> Building a more affordable Orange County <span className="text-lg">→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <main className="mx-auto max-w-[1500px] px-6 pb-16 pt-4">
         {err && <div className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-800">Could not load data: {err}</div>}
 
-        <div className="relative -mt-8 grid gap-6 lg:grid-cols-[290px_minmax(0,1fr)_330px]">
+        <div className="relative mt-6 grid gap-6 lg:grid-cols-[290px_minmax(0,1fr)_330px]">
           {/* Left: scoring studio + filters */}
           <div className="space-y-5">
             <div className="card p-5">
@@ -253,7 +318,7 @@ export default function Home() {
 
           {/* Center: map, call list, head-to-head */}
           <div className="min-w-0 space-y-5">
-            <div className={`card relative overflow-hidden p-0 transition-all ${expanded ? "h-[640px]" : "h-[400px]"}`}>
+            <div id="explore" className={`card relative scroll-mt-6 overflow-hidden p-0 transition-all ${expanded ? "h-[640px]" : "h-[400px]"}`}>
               {features.length > 0 && (
                 <MapView features={mapFeatures} publicLand={publicLand} selected={selected} weights={weights}
                   onSelect={(f) => { setSelected(f); setDrawer(true); }} layers={layers} setLayers={setLayers} pins={pins} expanded={expanded} />
@@ -266,7 +331,7 @@ export default function Home() {
               </button>
             </div>
 
-            <div className="flex items-end justify-between">
+            <div id="eligibility" className="flex scroll-mt-6 items-end justify-between">
               <div>
                 <span className="font-display text-2xl font-semibold">Ranked call list</span>
                 <span className="ml-3 text-sm text-[#6B6458]">{ranked.length.toLocaleString()} sites · weights: {PRESETS[preset]?.label ?? "Custom"}</span>
@@ -323,6 +388,7 @@ export default function Home() {
           <div className="space-y-5">
             {meta && <Funnel meta={meta} onList={ranked.length} publicLand={publicLand.length} sizeLabel={SIZES[size].label} />}
             <WeightsChart top={ranked} weights={weights} />
+            <div id="assistant" className="scroll-mt-6" />
             {meta && <AssistantCard ranked={ranked} compare={compare} selected={selected} weights={weights} meta={meta} />}
           </div>
         </div>
