@@ -5,7 +5,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Muxer, ArrayBufferTarget } from "mp4-muxer";
 
-const W = 1920, H = 1080, FPS = 30, DUR = 50;
+const W = 1920, H = 1080, FPS = 30, DUR = 72;
 const IV = "#FAF7F2", PAPER = "#FFFDF9", INK = "#1B2433", MUTED = "#6B6458", LINE = "#E9E2D6";
 const NAVY = "#1f3a5f", TEAL = "#2a7f8f", VIOLET = "#7c6bc4", AMBER = "#d9822b", SAFFRON = "#e2b33c", TERRA = "#c2562e", SAGE = "#3f7d5c";
 const FACT = [
@@ -218,18 +218,81 @@ function frame(g: CanvasRenderingContext2D, t: number, d: Data) {
       text(g, h, 210, y + 88, { size: 40, w: 700, a: a * clamp(p) }); text(g, l, 520, y + 88, { size: 36, a: a * clamp(p) }); text(g, r, 1150, y + 88, { size: 36, w: 600, c, a: a * clamp(p) }); });
     caption(g, "Sources disagree, and the tool shows it instead of picking one", a * ease(seg(t, 40, 40.5)));
   }
-  // S8 App montage 43-47.5
-  if (t >= 43 && t < 48) {
-    const a = ease(seg(t, 43, 43.6)) * (1 - seg(t, 47.4, 48));
+  // S7b Who it helps 43-50.5
+  if (t >= 43 && t < 51) {
+    const a = ease(seg(t, 43, 43.6)) * (1 - seg(t, 50.4, 51));
+    text(g, "Who it helps", 160, 200, { font: "d", size: 76, w: 600, a });
+    text(g, "Land is the biggest line on the bill, and small teams can't see it.", 160, 262, { size: 36, c: MUTED, a });
+    const people: [string, string, string, string][] = [
+      ["Small housing nonprofits", "Get a ranked call list without a GIS team", "🏘️", NAVY],
+      ["Congregations with a lot", "See if their land could host homes (SB 4)", "⛪", TERRA],
+      ["City housing staff", "Flag hazards and stale site lists first", "🏛️", TEAL],
+    ];
+    people.forEach(([h, sub, ic, c], i) => {
+      const p = outBack(seg(t, 44 + i * 0.6, 44.8 + i * 0.6)); const x = 160 + i * 560, y = 330 + (1 - clamp(p)) * 60;
+      card(g, x, y, 520, 330, a * clamp(p));
+      g.save(); g.globalAlpha = a * clamp(p); rr(g, x + 36, y + 36, 96, 96, 24); g.fillStyle = c; g.fill(); g.restore();
+      text(g, ic, x + 84, y + 106, { size: 52, align: "center", a: a * clamp(p), c: "#fff" });
+      text(g, h, x + 36, y + 205, { size: 38, w: 700, a: a * clamp(p) });
+      text(g, sub.length > 34 ? sub.slice(0, sub.lastIndexOf(" ", 34)) : sub, x + 36, y + 255, { size: 28, c: MUTED, a: a * clamp(p) });
+      if (sub.length > 34) text(g, sub.slice(sub.lastIndexOf(" ", 34) + 1), x + 36, y + 292, { size: 28, c: MUTED, a: a * clamp(p) });
+    });
+    const nLayers = Object.values(d.meta.layers).filter(Boolean).length + 2;
+    const stats: [string, string][] = [[String(d.meta.laws.laws.length), "state laws tested"], [String(nLayers), "public data layers checked"], [fmt(d.meta.counts.parcels_screened), "parcels screened"]];
+    stats.forEach(([n, l], i) => { const p = ease(seg(t, 46.4 + i * 0.4, 47.2 + i * 0.4));
+      text(g, n, 160 + i * 560, 800, { font: "d", size: 84, w: 700, c: NAVY, a: a * p }); text(g, l, 160 + i * 560, 850, { size: 32, c: MUTED, a: a * p }); });
+    text(g, "From weeks of map-hopping to one ranked list, with the sources on screen.", 160, 960, { size: 38, w: 600, c: TERRA, a: a * ease(seg(t, 48.2, 49)) });
+  }
+  // S7c Where the intelligence is 51-58.5
+  if (t >= 51 && t < 59) {
+    const a = ease(seg(t, 51, 51.6)) * (1 - seg(t, 58.4, 59));
+    text(g, "Where the intelligence is", 160, 190, { font: "d", size: 76, w: 600, a });
+    // left: built with Claude
+    card(g, 160, 250, 800, 640, a * ease(seg(t, 51.4, 52)));
+    pill(g, "BUILT WITH CLAUDE", 200, 290, NAVY, "#fff", 24, a * ease(seg(t, 51.6, 52.2)));
+    const built = ["Read HCD's fact sheets and turned each law into tests, with quotes", "Inspected every data layer's fields before using it", "Wrote the pipeline, the rules engine and this app", "Caught source conflicts: size, vacancy, zone"];
+    built.forEach((b, i) => { const p = ease(seg(t, 52.2 + i * 0.5, 52.9 + i * 0.5)); const y = 410 + i * 120;
+      g.save(); g.globalAlpha = a * p; g.fillStyle = TEAL; g.beginPath(); g.arc(215, y - 10, 9, 0, 7); g.fill(); g.restore();
+      const words = b.split(" "); let line = "", ly = y; for (const w of words) { if ((line + w).length > 36) { text(g, line, 245, ly, { size: 30, a: a * p }); line = ""; ly += 40; } line += w + " "; } text(g, line, 245, ly, { size: 30, a: a * p }); });
+    // right: inside the app
+    card(g, 1000, 250, 760, 640, a * ease(seg(t, 51.8, 52.4)));
+    pill(g, "INSIDE THE APP · RULES OVER DATA", 1040, 290, TERRA, "#fff", 24, a * ease(seg(t, 52, 52.6)));
+    const feats: [string, string][] = [["Plain-English search", "→ filter chips you can remove"], ["Feasibility Copilot", "score, assessment, next step"], ["Assistant", "answers only from screening data"], ["Drafted city email", "never sent for you"]];
+    feats.forEach(([h, sub], i) => { const p = outBack(seg(t, 53 + i * 0.5, 53.7 + i * 0.5)); const y = 395 + i * 118 + (1 - clamp(p)) * 30;
+      g.save(); g.globalAlpha = a * clamp(p); rr(g, 1040, y - 38, 56, 56, 14); g.fillStyle = "#fff4ea"; g.fill(); g.restore();
+      text(g, "✦", 1068, y - 2, { size: 32, c: "#f07a2c", align: "center", a: a * clamp(p) });
+      text(g, h, 1115, y - 6, { size: 34, w: 700, a: a * clamp(p) }); text(g, sub, 1115, y + 30, { size: 26, c: MUTED, a: a * clamp(p) }); });
+    text(g, "No language model runs in the app, so nothing can be invented. Every line traces to a test result.", 960, 970, { size: 34, w: 600, c: NAVY, align: "center", a: a * ease(seg(t, 55.8, 56.6)) });
+  }
+  // S7d Technology 59-65.5
+  if (t >= 59 && t < 66) {
+    const a = ease(seg(t, 59, 59.6)) * (1 - seg(t, 65.4, 66));
+    text(g, "Technology", 160, 200, { font: "d", size: 76, w: 600, a });
+    const groups: [string, string, string[]][] = [
+      ["Interface", NAVY, ["Next.js 14", "React 18", "TypeScript", "Tailwind CSS", "Leaflet maps"]],
+      ["Data pipeline", TEAL, ["Python 3.9", "Shapely 2.0", "ArcGIS REST", "GeoJSON"]],
+      ["Public data", AMBER, ["Santa Ana GIS", "SCAG", "FEMA NFHL", "CAL FIRE", "Caltrans", "HCD", "OpenStreetMap", "US Census"]],
+      ["Built and filmed with", VIOLET, ["Claude Code", "WebCodecs + mp4-muxer"]],
+    ];
+    groups.forEach(([h, c, items], gi) => { const gy = 290 + gi * 185; const gp = ease(seg(t, 59.5 + gi * 0.5, 60.2 + gi * 0.5));
+      g.save(); g.globalAlpha = a * gp; rr(g, 160, gy - 40, 10, 130, 5); g.fillStyle = c; g.fill(); g.restore();
+      text(g, h, 200, gy, { size: 34, w: 700, c, a: a * gp });
+      let x = 200; items.forEach((it, i) => { const p = outBack(seg(t, 60 + gi * 0.5 + i * 0.12, 60.6 + gi * 0.5 + i * 0.12));
+        x += pill(g, it, x, gy + 24 + (1 - clamp(p)) * 20, "#fff", INK, 30, a * clamp(p)) + 14; }); });
+    caption(g, "All public data, all free to use. On a fresh laptop: npm install, then npm run dev.", a * ease(seg(t, 63.2, 63.9)));
+  }
+  // S8 App montage 65-69.5
+  if (t >= 65 && t < 70) {
+    const a = ease(seg(t, 65, 65.6)) * (1 - seg(t, 69.4, 70));
     const shots = ["workbench", "compare", "layers"];
-    shots.forEach((k, i) => { const im = d.imgs[k]; if (!im) return; const p = ease(seg(t, 43.3 + i * 0.5, 44.1 + i * 0.5));
+    shots.forEach((k, i) => { const im = d.imgs[k]; if (!im) return; const p = ease(seg(t, 65.3 + i * 0.5, 66.1 + i * 0.5));
       const w = 820, h = w * im.height / im.width; const x = 120 + i * 560, y = 250 + (i % 2) * 120 + (1 - p) * 80;
       g.save(); g.globalAlpha = a * p; g.shadowColor = "rgba(27,36,51,.25)"; g.shadowBlur = 50; g.shadowOffsetY = 20; rr(g, x, y, w, h, 18); g.clip(); g.drawImage(im, x, y, w, h); g.restore(); });
     text(g, "Search · score · compare · map layers · ask", W / 2, 170, { font: "d", size: 60, w: 600, align: "center", a });
   }
-  // S9 End 47.5-50
-  if (t >= 47.5) {
-    const a = ease(seg(t, 47.5, 48.2));
+  // S9 End 69.5-72
+  if (t >= 69.5) {
+    const a = ease(seg(t, 69.5, 70.2));
     skyline(g, a, 1);
     logo(g, d, W / 2 - 250, 300, 120, a);
     wordmark(g, W / 2 + 60, 335, 110, a);
