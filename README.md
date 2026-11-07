@@ -64,7 +64,7 @@ HCD fact sheet it came from, and there's a draft question for city planning they
 
 ![Parcel panel and site assistant](docs/screenshots/top-site-2019-n-grand.jpg)
 
-**Demo video:** [link]
+**Demo video:** uploaded on the hub. It was rendered by the app itself at `/film` (canvas animation from the real data, encoded to MP4 in the browser).
 **Live demo:** [optional]
 
 ## Real test case: 1111 N Bristol St, Santa Ana (city surplus land)
