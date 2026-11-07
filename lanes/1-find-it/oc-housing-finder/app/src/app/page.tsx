@@ -12,6 +12,7 @@ import SourcesModal from "@/components/SourcesModal";
 import CompareModal from "@/components/CompareModal";
 import CallCard from "@/components/CallCard";
 import { AssistantCard, Funnel, HeadToHead, WeightsChart } from "@/components/Workbench";
+import HeroArt from "@/components/HeroArt";
 
 const MapView = dynamic(() => import("@/components/MapView"), {
   ssr: false,
@@ -150,7 +151,11 @@ export default function Home() {
 
       <main className="mx-auto max-w-[1500px] px-6 pb-16">
         {/* Ask bar */}
-        <section className="mx-auto max-w-[1100px] pt-7">
+        <section className="relative -mx-6 overflow-hidden px-6 pb-48 pt-8">
+          <HeroArt />
+          <div className="relative mx-auto max-w-[1100px]">
+          <h1 className="font-display mb-1 text-[30px] font-semibold leading-tight tracking-tight text-[#1B2433]">Where can the next affordable home go?</h1>
+          <p className="mb-5 text-[14px] text-[#6B6458]">Every Santa Ana parcel, screened against California's land-opening housing laws. Pass, fail or unknown, with sources.</p>
           <div className="mb-3 flex gap-2">
             {(["ask", "apn"] as const).map((m) => (
               <button key={m} onClick={() => setMode(m)} className={`rounded-full border px-3.5 py-1.5 text-[13px] font-medium ${mode === m ? "border-[#1f3a5f] bg-white text-[#1f3a5f]" : "border-[#E9E2D6] text-[#6B6458]"}`}>
@@ -178,12 +183,13 @@ export default function Home() {
             {TRY.slice(1, 3).map((t) => (
               <button key={t} onClick={() => { setMode("ask"); setText(t); setParsed(parseQuery(t)); setQ(""); }} className="rounded-full border border-dashed border-[#2a7f8f]/50 px-3 py-1 text-[#2a7f8f] hover:bg-[#2a7f8f]/5">{t}</button>
             ))}
-            <span className="text-[11px] text-[#b5ad9f]">· keyword rules, not AI</span>
+            <span className="text-[11px] text-[#9c958a]">· keyword rules, not AI</span>
+          </div>
           </div>
         </section>
         {err && <div className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-800">Could not load data: {err}</div>}
 
-        <div className="mt-7 grid gap-6 lg:grid-cols-[290px_minmax(0,1fr)_330px]">
+        <div className="relative -mt-8 grid gap-6 lg:grid-cols-[290px_minmax(0,1fr)_330px]">
           {/* Left: scoring studio + filters */}
           <div className="space-y-5">
             <div className="card p-5">
