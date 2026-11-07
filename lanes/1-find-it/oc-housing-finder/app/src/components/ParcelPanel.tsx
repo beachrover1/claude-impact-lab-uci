@@ -5,6 +5,7 @@ import { COMPONENT_LABELS, expandTests, score } from "@/lib/types";
 import { draftEmail, explain } from "@/lib/explain";
 import { LABEL_COLOR, LAW_SHORT, loadDetail } from "@/lib/detail";
 import ScoreRing from "./ScoreRing";
+import Feasibility from "./Feasibility";
 
 const ICON: Record<Status, string> = { pass: "✅", fail: "❌", unknown: "❓", lead: "🔎" };
 const STATUS_TEXT: Record<Status, string> = { pass: "Pass", fail: "Fail", unknown: "Could not check", lead: "Lead, not fact" };
@@ -61,6 +62,7 @@ export default function ParcelPanel({ f, meta, weights, onClose, inCompare, onTo
       {!d && <div className="p-4 text-[#6B6458]">Loading details…</div>}
       {d && ex && (
         <div className="space-y-5 p-5">
+          <Feasibility f={f} d={d} meta={meta} weights={weights} />
           <section>
             <h3 className="mb-1 font-semibold text-[#1B2433]">Why this site</h3>
             <p className="mb-2 text-xs text-[#6B6458]">Written from the test results below. Each line is marked as verified data, an estimate, or something to confirm.</p>

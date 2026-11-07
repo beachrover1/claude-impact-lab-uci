@@ -49,6 +49,11 @@ HCD fact sheet it came from, and there's a draft question for city planning they
 - **Site assistant on the map:** ask about the selected parcel ("What could block it?",
   "Which law fits best?", "Who should I call?"). In this build it answers only from that parcel's
   screening data, with no LLM, so it cannot invent facts. It says so on screen.
+- **Feasibility Copilot** (top of each parcel's panel): a score gauge, parcel size, best pathway,
+  transit, ownership evidence and data completeness; a point-by-point "why this score"; a
+  plain-language site assessment; and a concrete next step. Built only from the screening results
+  (no LLM in this build, stated on screen). Weights are ASSUMPTIONS, not eligibility criteria.
+  ![Feasibility Copilot](docs/screenshots/feasibility-copilot.jpg)
 - **Compare up to 3 parcels** side by side: every law, hazard, vacancy and score component.
 - **Ask in plain English:** "Vacant single-family lots near transit, at least half an acre" becomes
   removable filter chips (R1, Vacant, ≥ 0.5 ac, Near transit). This uses keyword rules, not AI, and says so.
