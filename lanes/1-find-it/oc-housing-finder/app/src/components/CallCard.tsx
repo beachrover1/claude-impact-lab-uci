@@ -4,6 +4,7 @@ import type { Detail, Feature, Meta, Weights } from "@/lib/types";
 import { expandTests } from "@/lib/types";
 import { LAW_SHORT, loadDetail } from "@/lib/detail";
 import { FACTORS, LABEL_STYLE } from "@/lib/theme";
+import { money } from "@/lib/price";
 
 const LAW_ORDER = ["SB9", "SHRA_SB684", "SHRA_SB1123", "AB2011", "SB4"];
 
@@ -38,6 +39,7 @@ export default function CallCard({
   const tags = [
     `${p.acres} ac`,
     `zone ${p.zone ?? "?"}`,
+    ...(p.land_value ? [`${money(p.land_value)} assessed land`] : []),
     ...Object.entries(p.laws).filter(([, v]) => v === "possible").map(([k]) => LAW_SHORT[k]),
     ...(p.flags.vacant ? ["Vacant"] : []),
     ...(p.flags.transit ? ["Transit"] : []),

@@ -6,6 +6,7 @@ import type { Detail, Feature, Meta, Weights } from "@/lib/types";
 import { expandTests, score } from "@/lib/types";
 import { FACTORS } from "@/lib/theme";
 import Massing3D from "./Massing3D";
+import { PRICE_NOTE, money, perAcre } from "@/lib/price";
 
 function Gauge({ value }: { value: number }) {
   const a = Math.PI * (1 - value / 100);
@@ -84,7 +85,7 @@ export default function Feasibility({ f, d, meta, weights }: { f: Feature; d: De
           <span className="num text-[30px] font-bold text-[#14284b]">{s}</span><span className="text-sm text-[#6B6458]"> / 100 site score</span>
         </div>
         <div className="grid w-full grid-cols-2 gap-1.5 text-[11.5px]">
-          {[["Parcel size", `${p.acres} acres`], ["Data completeness", `${completeness}% checked`], ["Best pathway", pathway], ["Transit", transit], ["Ownership", ownership], ["Zone", `${p.zone ?? "?"}${x.zone_desc ? " · " + x.zone_desc : ""}`]].map(([k, v]) => (
+          {[["Parcel size", `${p.acres} acres`], ["Assessed land value", p.land_value ? `${money(p.land_value)} · ${money(perAcre(p.land_value, p.acres))} per acre` : "Not assessed (exempt or public?)"], ["Data completeness", `${completeness}% checked`], ["Best pathway", pathway], ["Transit", transit], ["Ownership", ownership], ["Zone", `${p.zone ?? "?"}${x.zone_desc ? " · " + x.zone_desc : ""}`]].map(([k, v]) => (
             <div key={k} className={`rounded-lg bg-[#f6f1e8] px-2 py-1.5 ${k === "Best pathway" || k === "Ownership" ? "col-span-2" : ""}`}>
               <div className="text-[9.5px] font-semibold uppercase tracking-wider text-[#9c958a]">{k}</div>
               <div className="font-medium leading-snug text-[#1B2433]">{v}</div>
@@ -106,6 +107,7 @@ export default function Feasibility({ f, d, meta, weights }: { f: Feature; d: De
           </div>
         ))}
         <p className="text-[10.5px] text-[#c2562e]">Weights are ASSUMPTIONS for ranking, not legal eligibility criteria.</p>
+        <p className="mt-0.5 text-[10.5px] text-[#6B6458]">Land value: {PRICE_NOTE}</p>
       </div>
 
       <Massing3D f={f} />

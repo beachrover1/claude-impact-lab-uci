@@ -416,6 +416,8 @@ def main():
                           "sfha": sfha, "vhfhsz": vhfhsz, "transit": bool(transit), "zone_conflict": zone_conflict},
                 "acres": round(acres, 3), "zone": zcode or scag_code,
                 "zcat": (zi or {}).get("category"),
+                # County assessed land value. NOT a market price (Prop 13 caps assessments).
+                "land_value": int(land) if land > 0 else None,
             },
             "_detail": {"facts": facts, "results": results},
         })

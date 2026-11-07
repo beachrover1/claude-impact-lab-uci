@@ -55,6 +55,9 @@ export default function SourcesModal({ meta, onClose }: { meta: Meta; onClose: (
           <li>Zone categories (single-family, multifamily, commercial…) are our reading of Santa Ana's zone descriptions, not a city determination. Specific plans and specific developments are marked “needs review”.</li>
         </ul>
 
+        <h3 className="mt-4 font-semibold">About the land prices shown</h3>
+        <p>Prices are the county's <b>assessed land value</b> (field LandVal in the Santa Ana Assessor Parcels layer, downloaded 2026-11-07), shown per parcel and per acre. They are tax assessments, <b>not market prices or offers</b>. Prop 13 caps yearly increases, so long-held parcels are often assessed far below what they would sell for, and parcels with no assessment (such as some exempt or public land) show "n/a". We do not estimate market prices because no free, verified source was found.</p>
+
         <h3 className="mt-4 font-semibold text-red-800">Known data gaps</h3>
         <ul className="list-disc pl-5">
           {meta.data_gaps.map((g) => <li key={g}>{g}</li>)}

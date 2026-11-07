@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import type { Feature, Weights } from "@/lib/types";
 import { score } from "@/lib/types";
 import { ZONE_COLOR, ZONE_NAME } from "@/lib/detail";
+import { money } from "@/lib/price";
 import { LABEL_STYLE } from "@/lib/theme";
 const LABEL_COLOR: Record<string, string> = Object.fromEntries(Object.entries(LABEL_STYLE).map(([k, v]) => [k, v.map]));
 const scoreColor = (s: number) => (s >= 75 ? "#1f3a5f" : s >= 55 ? "#c2562e" : "#8b8478");
@@ -136,7 +137,7 @@ export default function MapView({
                  <span style="display:inline-block;width:8px;height:8px;border-radius:9999px;background:${scoreColor(s)}"></span>
                  <span style="color:#334155">Score <b>${s}</b> · ${p.label}</span>
                </div>
-               <div style="color:#64748b;font-size:11px;margin-top:2px">${p.acres} ac · zone ${p.zone ?? "?"}${layers.zoning && p.zcat ? " · " + (ZONE_NAME[p.zcat] ?? "") : ""}</div>
+               <div style="color:#64748b;font-size:11px;margin-top:2px">${p.acres} ac · ${p.land_value ? money(p.land_value) + " assessed · " : ""}zone ${p.zone ?? "?"}${layers.zoning && p.zcat ? " · " + (ZONE_NAME[p.zcat] ?? "") : ""}</div>
              </div>`,
             { sticky: true, direction: "top", offset: [0, -8], className: "ohf-tip" }
           );

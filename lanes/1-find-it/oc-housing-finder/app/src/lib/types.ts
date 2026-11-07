@@ -22,6 +22,7 @@ export type ParcelProps = {
   acres: number;
   zone: string | null;
   zcat?: string | null;
+  land_value?: number | null;
 };
 
 export type Feature = {

@@ -1,6 +1,6 @@
 {
  "city": "Santa Ana",
- "generated": "2026-11-07 12:03",
+ "generated": "2026-11-07 14:20",
  "counts": {
   "parcels_screened": 57926,
   "candidates": 18760,
@@ -13,8 +13,8 @@
  "law_counts": {
   "AB2011": 2695,
   "SHRA_SB684": 3646,
-  "SB9": 336,
   "SHRA_SB1123": 346,
+  "SB9": 336,
   "SB4": 44
  },
  "assumptions": {

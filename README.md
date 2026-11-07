@@ -145,6 +145,7 @@ python3 -m venv .venv && .venv/bin/pip install -r pipeline/requirements.txt
 | SB 4 tests | HCD fact sheet, Faith & Higher Education Lands Act, Gov. Code § 65913.16: https://www.hcd.ca.gov/sites/default/files/docs/planning-and-community/aff-hsg-faith-higher-ed-sb-4.pdf | 2026-11-07 |
 | SB 684 / SB 1123 tests | HCD Housing Law Fact Sheets (combined), Starter Home Revitalization Act, Gov. Code §§ 65852.28, 65913.4.5, 66499.41: https://www.hcd.ca.gov/sites/default/files/docs/planning-and-community/housing-law-fact-sheets.pdf | 2026-11-07 |
 | AB 2011 tests | Same combined PDF, AB 2011 section, Gov. Code §§ 65912.100-65912.140 | 2026-11-07 |
+| Land prices | County **assessed land value** (`LandVal`, same parcel layer), shown per parcel and per acre, with a price filter. Tax assessments, **not market prices**: Prop 13 often keeps them well below sale prices, and some parcels have none. No market-price estimate is made | 2026-11-07 |
 | Parcels | Santa Ana Assessor Parcels (owner-name and mailing-address fields deliberately not downloaded): https://gis.santa-ana.org/server/rest/services/Public/GIS_AssessorParcels/MapServer/0 | 2026-11-07 |
 | Zoning (primary) | Santa Ana Zoning Classifications: https://gis.santa-ana.org/server/rest/services/Public/PBA_ZoningClassifications/FeatureServer/0 | 2026-11-07 |
 | Zoning (second source) | SCAG Zoning_poly_OR (2024): https://maps.scag.ca.gov/scaggis/rest/services/LDX/Zoning_poly_OR/MapServer | 2026-11-07 |

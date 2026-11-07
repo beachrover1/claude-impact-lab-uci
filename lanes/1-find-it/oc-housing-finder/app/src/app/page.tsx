@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Feature, Meta, Weights } from "@/lib/types";
 import { score } from "@/lib/types";
 import { LAW_LONG, LAW_SHORT } from "@/lib/detail";
+import { PRICE_LIMITS, PRICE_NOTE, money, perAcre } from "@/lib/price";
 import { FACTORS, LABEL_STYLE, PRESETS } from "@/lib/theme";
 import { parseQuery, removeChip, type Parsed } from "@/lib/nlq";
 import type { Layers } from "@/components/MapView";
@@ -50,6 +51,7 @@ export default function Home() {
   const [laws, setLaws] = useState<string[]>(["SB9", "SHRA_SB684", "SHRA_SB1123", "AB2011", "SB4"]);
   const [labels, setLabels] = useState<string[]>(["Potentially suitable", "Needs review"]);
   const [land, setLand] = useState<string[]>([]);
+  const [price, setPrice] = useState("any");
   const [open, setOpen] = useState<Record<string, boolean>>({ pathways: true });
   const [size, setSize] = useState("small");
   const [preset, setPreset] = useState("balanced");
@@ -88,11 +90,12 @@ export default function Home() {
         if (parsed.lowFlood && p.flags.sfha) return false;
         if (land.includes("vacant") && !p.flags.vacant) return false;
         if (land.includes("underused") && !(p.flags.underused || p.flags.vacant)) return false;
+        if (price !== "any" && !(p.land_value && p.land_value <= PRICE_LIMITS[price].max)) return false;
         return true;
       })
       .map((f) => ({ f, s: score(f.properties.components, weights) }))
       .sort((a, b) => b.s - a.s);
-  }, [features, laws, labels, land, size, parsed, q, weights]);
+  }, [features, laws, labels, land, price, size, parsed, q, weights]);
 
   const publicLand = useMemo(() => features.filter((f) => f.properties.flags.surplus), [features]);
   const mapFeatures = useMemo(() => ranked.slice(0, 4000).map((x) => x.f), [ranked]);
@@ -104,10 +107,10 @@ export default function Home() {
   const toggleCompare = (f: Feature) => setCompare((c) => (inCompare(f) ? c.filter((x) => x.properties.apn !== f.properties.apn) : c.length >= 3 ? c : [...c, f]));
 
   function exportCsv() {
-    const rows = [["rank", "score_ASSUMPTION_weights", "apn", "address", "zone", "acres_computed", "label", "possible_pathways", "unknowns_to_confirm"]];
+    const rows = [["rank", "score_ASSUMPTION_weights", "apn", "address", "zone", "acres_computed", "assessed_land_value_usd_NOT_market_price", "assessed_per_acre_usd", "label", "possible_pathways", "unknowns_to_confirm"]];
     ranked.slice(0, 200).forEach(({ f, s }, i) => {
       const p = f.properties;
-      rows.push([String(i + 1), String(s), p.apn, p.address ?? "", p.zone ?? "", String(p.acres), p.label,
+      rows.push([String(i + 1), String(s), p.apn, p.address ?? "", p.zone ?? "", String(p.acres), p.land_value ? String(p.land_value) : "", p.land_value ? String(Math.round((p.land_value / p.acres) || 0)) : "", p.label,
         Object.entries(p.laws).filter(([, v]) => v === "possible").map(([k]) => LAW_SHORT[k]).join("; "), String(p.unknowns)]);
     });
     const csv = rows.map((r) => r.map((c) => `"${c.replace(/"/g, '""')}"`).join(",")).join("\n");
@@ -305,6 +308,12 @@ export default function Home() {
                   </label>
                 ))}
               </Section>
+              <Section id="price" title="Assessed land value" count={price === "any" ? 0 : 1}>
+                <select value={price} onChange={(e) => setPrice(e.target.value)} className="w-full rounded-xl border border-[#E9E2D6] bg-white px-3 py-2 text-[13px]">
+                  {Object.entries(PRICE_LIMITS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+                </select>
+                <p className="mt-2 text-[11px] leading-snug text-[#6B6458]">{PRICE_NOTE} Parcels with no assessed value are hidden when a limit is set.</p>
+              </Section>
               <Section id="land" title="Land type" count={land.length}>
                 {[["vacant", "Vacant (footprints < 2%)"], ["underused", "Vacant or possibly underused"], ["public", "Public land notice"], ["transit", "Near high-quality transit"]].map(([k, v]) => (
                   <label key={k} className="mb-1.5 flex cursor-pointer items-center gap-2 text-[13px]">
@@ -354,7 +363,7 @@ export default function Home() {
               <div className="card overflow-x-auto p-0">
                 <table className="w-full text-[13px]">
                   <thead className="bg-[#f3eee5] text-left text-[11px] uppercase tracking-wider text-[#6B6458]">
-                    <tr>{["#", "Score", "Address / APN", "Acres", "Zone", "Pathways", "Status", ""].map((h) => <th key={h} className="px-3 py-2.5">{h}</th>)}</tr>
+                    <tr>{["#", "Score", "Address / APN", "Acres", "Assessed land", "Zone", "Pathways", "Status", ""].map((h) => <th key={h} className="px-3 py-2.5">{h}</th>)}</tr>
                   </thead>
                   <tbody>
                     {ranked.slice(0, shown).map(({ f, s }, i) => (
@@ -363,6 +372,7 @@ export default function Home() {
                         <td className="num px-3 py-2 font-bold text-[#1f3a5f]">{s}</td>
                         <td className="px-3 py-2 font-medium">{f.properties.address ?? f.properties.apn}</td>
                         <td className="num px-3 py-2">{f.properties.acres}</td>
+                        <td className="num px-3 py-2">{money(f.properties.land_value)}<span className="text-[11px] text-[#9c958a]"> {f.properties.land_value ? `· ${money(perAcre(f.properties.land_value, f.properties.acres))}/ac` : ""}</span></td>
                         <td className="px-3 py-2">{f.properties.zone}</td>
                         <td className="px-3 py-2">{Object.entries(f.properties.laws).filter(([, v]) => v === "possible").map(([k]) => LAW_SHORT[k]).join(", ")}</td>
                         <td className="px-3 py-2">{f.properties.label}</td>

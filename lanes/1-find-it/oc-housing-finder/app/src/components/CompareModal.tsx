@@ -4,6 +4,7 @@ import type { Detail, Feature, Meta, Weights } from "@/lib/types";
 import { COMPONENT_LABELS, expandTests, score } from "@/lib/types";
 import { LAW_LONG, loadDetail } from "@/lib/detail";
 import ScoreRing from "./ScoreRing";
+import { money, perAcre } from "@/lib/price";
 
 const STATUS: Record<string, [string, string]> = {
   possible: ["Possible", "text-emerald-700 bg-emerald-50"],
@@ -60,6 +61,8 @@ export default function CompareModal({ items, meta, weights, onClose, onRemove }
           <tbody className="[&_th]:pl-6">
             {row("Result", (f) => f.properties.label)}
             {row("Lot size", (f) => `${f.properties.acres} ac (computed)`)}
+            {row("Assessed land value", (f) => (f.properties.land_value ? money(f.properties.land_value) : "n/a"))}
+            {row("Assessed per acre", (f) => (f.properties.land_value ? money(perAcre(f.properties.land_value, f.properties.acres)) : "n/a"))}
             {row("Zone", (f, d) => `${f.properties.zone ?? "?"}${d?.facts.zone_desc ? " · " + d.facts.zone_desc : ""}`)}
             {meta.laws.laws.map((l) =>
               row(LAW_LONG[l.id] ?? l.name, (f, d) => {
