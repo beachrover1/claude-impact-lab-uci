@@ -63,6 +63,26 @@ function skyline(g: CanvasRenderingContext2D, a: number, rise: number) {
   g.globalAlpha = a * 0.6; g.fillStyle = "#e9dcc6"; g.fillRect(0, base, W, 60); g.restore();
 }
 
+function wordmark(g: CanvasRenderingContext2D, cx: number, y: number, size: number, a: number) {
+  if (a <= 0) return;
+  g.save(); g.globalAlpha = a; g.font = `600 ${size}px Fraunces, Georgia, serif`; g.textBaseline = "alphabetic";
+  const wL = g.measureText("Land").width, wR = g.measureText("ra").width, o = size * 0.56, gap = size * 0.03;
+  const x0 = cx - (wL + o + 2 * gap + wR) / 2;
+  g.fillStyle = "#14284b"; g.fillText("Land", x0, y);
+  const ox = x0 + wL + gap + o / 2, oy = y - o / 2 + size * 0.02, r = o * 0.35;
+  const sg = g.createLinearGradient(0, oy - r, 0, oy + r); sg.addColorStop(0, "#ffb54d"); sg.addColorStop(1, "#e0641f");
+  g.lineWidth = o * 0.17; g.strokeStyle = sg; g.beginPath(); g.arc(ox, oy, r, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = "rgba(255,181,77,.55)"; g.beginPath(); g.arc(ox, oy, r * 0.68, Math.PI, 0); g.fill();
+  g.strokeStyle = "#e0641f"; g.lineWidth = o * 0.07; g.lineCap = "round"; g.beginPath(); g.moveTo(ox - o * 0.32, oy); g.lineTo(ox + o * 0.32, oy); g.stroke();
+  const rx = x0 + wL + 2 * gap + o; const rg = g.createLinearGradient(rx, 0, rx + wR, 0); rg.addColorStop(0, "#e0641f"); rg.addColorStop(1, "#f2a03a");
+  g.fillStyle = rg; g.fillText("ra", rx, y); g.restore();
+}
+function logo(g: CanvasRenderingContext2D, d: Data, cx: number, cy: number, s: number, a: number) {
+  const im = d.imgs.logo; if (!im || a <= 0) return;
+  g.save(); g.globalAlpha = a; g.shadowColor = "rgba(20,40,75,.3)"; g.shadowBlur = s * 0.25; g.shadowOffsetY = s * 0.08;
+  g.drawImage(im, cx - s / 2, cy - s / 2, s, s); g.restore();
+}
+
 function project(b: [number, number, number, number], box: [number, number, number, number]) {
   const [minx, miny, maxx, maxy] = b; const [x, y, w, h] = box;
   const kx = w / (maxx - minx), ky = h / (maxy - miny), k = Math.min(kx, ky * 1.2);
@@ -93,9 +113,11 @@ function frame(g: CanvasRenderingContext2D, t: number, d: Data) {
   if (t < 5) {
     const a = 1 - seg(t, 4.2, 5);
     skyline(g, a, ease(seg(t, 0, 1.6)));
-    text(g, "Landora", W / 2, 400, { font: "d", size: 120, w: 600, align: "center", a: a * ease(seg(t, 0.4, 1.4)) });
-    text(g, "Turn overlooked land into affordable homes.", W / 2, 490, { size: 48, c: MUTED, align: "center", a: a * ease(seg(t, 1.0, 2.0)) });
-    pill(g, "PROTOTYPE · SANTA ANA PILOT", 760, 560, TERRA, "#fff", 26, a * ease(seg(t, 1.6, 2.4)));
+    const pl = outBack(seg(t, 0.2, 1.1));
+    logo(g, d, W / 2, 230 + (1 - clamp(pl)) * 30, 170 * clamp(pl, 0, 1.2), a * clamp(pl));
+    wordmark(g, W / 2, 440, 130, a * ease(seg(t, 0.7, 1.6)));
+    text(g, "Turn overlooked land into affordable homes.", W / 2, 520, { size: 48, c: MUTED, align: "center", a: a * ease(seg(t, 1.0, 2.0)) });
+    pill(g, "PROTOTYPE · SANTA ANA PILOT", 760, 575, TERRA, "#fff", 26, a * ease(seg(t, 1.6, 2.4)));
   }
   // S2 Problem 4.5-10
   if (t >= 4.5 && t < 10.5) {
@@ -217,9 +239,11 @@ function frame(g: CanvasRenderingContext2D, t: number, d: Data) {
   if (t >= 47.5) {
     const a = ease(seg(t, 47.5, 48.2));
     skyline(g, a, 1);
-    text(g, "From luck to a call list.", W / 2, 380, { font: "d", size: 110, w: 600, align: "center", a });
-    text(g, "Landora · github.com/beachrover1/claude-impact-lab-uci", W / 2, 470, { size: 38, c: NAVY, w: 600, align: "center", a });
-    text(g, "Public data only · prototype, not legal advice · every result confirmed with the city", W / 2, 530, { size: 30, c: MUTED, align: "center", a });
+    logo(g, d, W / 2 - 250, 300, 120, a);
+    wordmark(g, W / 2 + 60, 335, 110, a);
+    text(g, "From luck to a call list.", W / 2, 470, { font: "d", size: 76, w: 600, align: "center", a });
+    text(g, "github.com/beachrover1/claude-impact-lab-uci", W / 2, 545, { size: 36, c: NAVY, w: 600, align: "center", a });
+    text(g, "Public data only · prototype, not legal advice · every result confirmed with the city", W / 2, 600, { size: 28, c: MUTED, align: "center", a });
   }
 }
 
@@ -237,7 +261,7 @@ async function loadData(): Promise<Data> {
   const bristol = feats.find((f) => f.properties.apn === "405-274-10");
   const bristolDetail = (await fetch("data/detail/405.json").then((r) => r.json()))["405-274-10"];
   const imgs: Record<string, HTMLImageElement> = {};
-  await Promise.all(["workbench", "compare", "layers"].map((k) => new Promise<void>((res) => { const im = new Image(); im.onload = () => { imgs[k] = im; res(); }; im.onerror = () => res(); im.src = `film/${k}.jpg`; })));
+  await Promise.all(["workbench", "compare", "layers", "logo"].map((k) => new Promise<void>((res) => { const im = new Image(); im.onload = () => { imgs[k] = im; res(); }; im.onerror = () => res(); im.src = k === "logo" ? "film/logo.svg" : `film/${k}.jpg`; })));
   return { feats, meta, matches, top, topDetail, bristol, bristolDetail, imgs, bounds: [minx, miny, maxx, maxy] } as Data;
 }
 
